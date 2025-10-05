@@ -1,0 +1,56 @@
+==========================
+    MENTOR DASHBOARD CHALLENGE
+==========================
+
+DAY 1 — Quizzes MVP
+--------------------------
+✅ useGetQuizzes({mine: true}) & useSaveQuiz()
+✅ QuizList (table/list)
+✅ QuizForm (inline)
+✅ MentorPage renders quizzes + form
+❌ RULE: Must compile, no overthinking. Typos = instant fix.
+
+DAY 2 — Courses MVP
+--------------------------
+✅ useGetCourses({mine: true}) & useSaveCourse()
+✅ CourseList & CourseForm
+✅ MentorPage renders courses + form
+❌ RULE: No copy-paste errors. Props must match.
+
+DAY 3 — UX Improvements
+--------------------------
+✅ Inline forms → Modals/Drawers
+✅ Edit/Delete buttons on lists
+✅ Loading & pending states
+❌ RULE: Everything must work. No shortcuts.
+
+DAY 4 — Layout / Dashboard Feel
+--------------------------
+✅ Sidebar navigation + Header
+✅ Wrap sections in Cards/Panels
+✅ Basic dashboard layout
+❌ RULE: Content must be visually separated. Ugly is fine; chaos is not.
+
+DAY 5 — Scalability & Reusability
+--------------------------
+✅ Parameterize hooks (mentorId, mine)
+✅ QuizList & CourseList flexible (onDelete/onEdit)
+✅ QuizForm/CourseForm handle create vs update
+❌ RULE: Hooks must work for future Admin/Student pages without rewrite.
+
+DAY 6 — Polish & Final Touches
+--------------------------
+✅ Icons, spacing, responsive design
+✅ Skeleton loaders, toasts, disable pending buttons
+✅ Optional: search/filter
+❌ RULE: Must feel like a dashboard. No perfectionism, just polish.
+
+==========================
+BRUTAL RULES TO LIVE BY
+==========================
+1️⃣ Code must compile = minimum bar.
+2️⃣ Naming discipline only. No `currentzquiz`.
+3️⃣ One phase per day. Focus.
+4️⃣ No overthinking. Decide, commit, iterate.
+5️⃣ Max 4–5 hours per day. Clock is ticking.
+==========================

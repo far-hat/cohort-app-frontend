@@ -1,0 +1,41 @@
+[
+  {
+    "quiz_id": "QZ101",
+    "course_title": "JavaScript Basics",
+    "description": "Covers variables, loops, and functions.",
+    "mentor_id": "M001",
+    "quiz_date": "2025-09-20",
+    "start_time": "10:00",
+    "end_time": "10:30",
+    "duration": 30,
+    "status": "published",
+    "questionIds": ["JSQ1", "JSQ2", "JSQ3"],
+    "instructions" : "Welcome to the quiz. Read all instructions carefully, You have set duration to complete the quiz. Answer each question by clicking the correct option / typing your answer. Do not use other resources / have multiple tabs open, and Contact your instructor / support if you have technical difficulties"
+  },
+  {
+    "quiz_id": "QZ102",
+    "course_title": "HTML & CSS Fundamentals",
+    "description": "Tests knowledge of markup and basic styling.",
+    "mentor_id": "M002",
+    "quiz_date": "2025-09-21",
+    "start_time": "14:00",
+    "end_time": "14:20",
+    "duration": 20,
+    "status": "draft",
+    "questionIds": ["HCQ1", "HCQ2"],
+    "instructions" : "Welcome to the quiz. Read all instructions carefully, You have set duration to complete the quiz. Answer each question by clicking the correct option / typing your answer. Do not use other resources / have multiple tabs open, and Contact your instructor / support if you have technical difficulties"
+  },
+  {
+    "quiz_id": "QZ103",
+    "course_title": "React Intro",
+    "description": "Basic concepts of React components and props.",
+    "mentor_id": "M001",
+    "quiz_date": "2025-09-22",
+    "start_time": "16:00",
+    "end_time": "16:30",
+    "duration": 30,
+    "status": "published",
+    "questionIds": ["RQ1", "RQ2", "RQ3", "RQ4"],
+    "instructions" : "Welcome to the quiz. Read all instructions carefully, You have set duration to complete the quiz. Answer each question by clicking the correct option / typing your answer. Do not use other resources / have multiple tabs open, and Contact your instructor / support if you have technical difficulties"
+  }
+]

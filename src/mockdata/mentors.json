@@ -1,0 +1,26 @@
+[
+  {
+    "mentor_id": "M001",
+    "name": "Farhat Gulzar",
+    "email": "farhat@example.com",
+    "bio": "Front-end developer and instructor specializing in JavaScript and React.",
+    "expertise": ["JavaScript", "React", "Web Accessibility"],
+    "avatarUrl": "/images/mentors/farhat.jpg"
+  },
+  {
+    "mentor_id": "M002",
+    "name": "Aamina Riyaz",
+    "email": "aisha@example.com",
+    "bio": "HTML/CSS expert and UI designer.",
+    "expertise": ["HTML", "CSS", "Design Systems"],
+    "avatarUrl": "/images/mentors/aamina.jpg"
+  },
+  {
+    "mentor_id": "M003",
+    "name": "Rohit Verma",
+    "email": "rohit@example.com",
+    "bio": "Backend engineer, interested in APIs and data modeling.",
+    "expertise": ["Node.js", "Databases"],
+    "avatarUrl": "/images/mentors/rohit.jpg"
+  }
+]

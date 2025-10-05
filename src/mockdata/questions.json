@@ -1,0 +1,161 @@
+[
+  {
+    "question_id": "JSQ1",
+    "quiz_id": "QZ101",
+    "question_text": "Which keyword is used to declare a variable in JavaScript?",
+    "options": ["var", "int", "let", "const"],
+    "correct_answer": "var"
+  },
+  {
+    "question_id": "JSQ2",
+    "quiz_id": "QZ101",
+    "question_text": "What is the output of 2 + '2' in JavaScript?",
+    "options": ["4", "22", "NaN", "undefined"],
+    "correct_answer": "22"
+  },
+  {
+    "question_id": "JSQ3",
+    "quiz_id": "QZ101",
+    "question_text": "Which function is used to parse a string into an integer?",
+    "options": ["parseInt()", "toString()", "parseFloat()", "Number()"],
+    "correct_answer": "parseInt()"
+  },
+
+  {
+    "question_id": "HCQ1",
+    "quiz_id": "QZ102",
+    "question_text": "Which HTML tag is used to define the largest heading?",
+    "options": ["<h6>", "<h1>", "<heading>", "<header>"],
+    "correct_answer": "<h1>"
+  },
+  {
+    "question_id": "HCQ2",
+    "quiz_id": "QZ102",
+    "question_text": "Which CSS property controls text size?",
+    "options": ["font-size", "text-style", "text-size", "font-style"],
+    "correct_answer": "font-size"
+  },
+
+  {
+    "question_id": "RQ1",
+    "quiz_id": "QZ103",
+    "question_text": "What is a React component?",
+    "options": [
+      "A reusable piece of UI",
+      "A database model",
+      "A CSS style",
+      "A JavaScript variable"
+    ],
+    "correct_answer": "A reusable piece of UI"
+  },
+  {
+    "question_id": "RQ2",
+    "quiz_id": "QZ103",
+    "question_text": "Which hook is used for state management in React?",
+    "options": ["useEffect", "useState", "useRef", "useContext"],
+    "correct_answer": "useState"
+  },
+  {
+    "question_id": "RQ3",
+    "quiz_id": "QZ103",
+    "question_text": "Props in React are ____?",
+    "options": [
+      "Functions",
+      "Immutable inputs",
+      "Mutable states",
+      "Event handlers"
+    ],
+    "correct_answer": "Immutable inputs"
+  },
+  {
+    "question_id": "RQ4",
+    "quiz_id": "QZ103",
+    "question_text": "Which command is used to create a new React app?",
+    "options": [
+      "npm init react",
+      "npx create-react-app",
+      "npm install react",
+      "npx new react-app"
+    ],
+    "correct_answer": "npx create-react-app"
+  },
+
+  {
+    "question_id": "RQ2",
+    "quiz_id": "QZ103",
+    "question_text": "Why do JavaScript developers wear glasses?",
+    "options": [
+      "Because they don’t C#",
+      "Because arrays start at 0",
+      "Because React broke their eyes",
+      "Because jQuery is too blurry"
+    ],
+    "correct_answer": "Because they don’t C#"
+  },
+  {
+    "question_id": "RQ3",
+    "quiz_id": "QZ103",
+    "question_text": "What's a developer's favorite tea?",
+    "options": [
+      "HTML-tea",
+      "CSS-tea",
+      "Java-tea",
+      "Git-Tea"
+    ],
+    "correct_answer": "Java-tea"
+  },
+  {
+    "question_id": "RQ4",
+    "quiz_id": "QZ103",
+    "question_text": "What's the primary use of the <div> tag?",
+    "options": [
+      "To divide content",
+      "To confuse future developers",
+      "To create chaos in layout",
+      "All of the above"
+    ],
+    "correct_answer": "All of the above"
+  },
+  {
+    "question_id": "RQ5",
+    "quiz_id": "QZ103",
+    "question_text": "What happens when a front-end dev opens a back-end codebase?",
+    "options": [
+      "They optimize it",
+      "They refactor it",
+      "They close it and cry",
+      "They turn it into a React app"
+    ],
+    "correct_answer": "They close it and cry"
+  },
+  {
+    "question_id": "RQ6",
+    "quiz_id": "QZ103",
+    "question_text": "Why did the developer go broke?",
+    "options": [
+      "Too many unpaid internships",
+      "Because they used \"float: left\"",
+      "Because they lost their cache",
+      "They spent it all on dark mode themes"
+    ],
+    "correct_answer": "Because they lost their cache"
+  },
+  {
+    "question_id": "RQ7",
+    "quiz_id": "QZ103",
+    "question_text": "What's the most terrifying moment in web development?",
+    "options": [
+      "Deploying to production",
+      "Seeing “undefined”",
+      "Client says “it’s just a small change”",
+      "Accidentally deleting node_modules"
+    ],
+    "correct_answer": "Client says “it’s just a small change”"
+  }
+
+
+
+]
+
+
+  

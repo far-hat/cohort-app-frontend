@@ -1,0 +1,156 @@
+const form = useForm<FormData>({
+    resolver : zodResolver(formSchema),
+    defaultValues: {
+      questions: [
+        {
+          questionText: "",
+          options: [{ value: "" }, { value: "" }],
+          correctAnswer: "",
+        },
+      ],
+    },
+  });
+
+  const {
+    fields: questionFields,
+    append: addQuestion,
+    remove: removeQuestion,
+  } = useFieldArray({
+    control: form.control,
+    name: "questions",
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {questionFields.map((q, qIndex) => {
+          const {
+            fields: optionFields,
+            append: addOption,
+            remove: removeOption,
+          } = useFieldArray({
+            control: form.control,
+            name: `questions.${qIndex}.options`,
+          });
+
+          return (
+            <div key={q.id} className="border p-4 rounded-md space-y-4">
+              {/* QUESTION TEXT */}
+              <FormField
+                control={form.control}
+                name={`questions.${qIndex}.questionText`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Question {qIndex + 1}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter question text" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* OPTIONS + RADIO SELECT */}
+              <Controller
+                control={form.control}
+                name={`questions.${qIndex}.correctAnswer`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Options</FormLabel>
+                    <FormDescription>
+                      Add up to 4 options and choose the correct one.
+                    </FormDescription>
+                    <FormControl>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        {optionFields.map((option, oIndex) => (
+                          <div
+                            key={option.id}
+                            className="flex items-center gap-2 my-2"
+                          >
+                            {/* option input */}
+                            <Input
+                              {...form.register(
+                                `questions.${qIndex}.options.${oIndex}.value`
+                              )}
+                              placeholder={`Option ${oIndex + 1}`}
+                            />
+                            {/* radio button */}
+                            <RadioGroupItem
+                              value={
+                                option.value ?? "" // always string
+                              }
+                              id={`q${qIndex}o${oIndex}`}
+                            />
+                            <FormLabel htmlFor={`q${qIndex}o${oIndex}`}>
+                              Correct
+                            </FormLabel>
+                            {/* remove option button */}
+                            {optionFields.length > 2 && (
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => removeOption(oIndex)}
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+
+                    {/* add option */}
+                    {optionFields.length < 4 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addOption({ value: "" })}
+                      >
+                        + Add Option
+                      </Button>
+                    )}
+                  </FormItem>
+                )}
+              />
+
+              {/* remove question */}
+              {questionFields.length > 1 && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => removeQuestion(qIndex)}
+                >
+                  Remove Question
+                </Button>
+              )}
+            </div>
+          );
+        })}
+
+        {/* add question */}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() =>
+            addQuestion({
+              questionText: "",
+              options: [{ value: "" }, { value: "" }],
+              correctAnswer: "",
+            })
+          }
+        >
+          + Add Question
+        </Button>
+
+        {/* submit */}
+        <Button type="submit" className="bg-blue-900 text-white hover:bg-blue-700">
+          Save Questions
+        </Button>
+      </form>
+    </Form>
+  );
