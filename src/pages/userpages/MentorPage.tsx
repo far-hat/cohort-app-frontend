@@ -1,10 +1,13 @@
 import DashboardLayout from "@/components/DashboardLayout";
+import { SideBar } from "@/components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 
 const MentorPage = () => {
     const navigate = useNavigate();
 
     return (
+       <>
+        
         <DashboardLayout>
             <div className="p-10 space-y-8">
 
@@ -28,6 +31,7 @@ const MentorPage = () => {
             </div>
         </div>
         </DashboardLayout>
+       </>
     );
 };
 export default MentorPage;

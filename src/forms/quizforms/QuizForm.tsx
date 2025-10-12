@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar1 } from "lucide-react";
-import React from "react";
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,10 +22,13 @@ import { z } from "zod";
 const quizSchema = z
   .object({
     course_name: z.string().min(1, "Course name is required"),
+    quiz_description :z.string().optional(),
+    status: z.string().optional(),
     start_date: z.date().optional(),
     start_time: z.string().optional(),
     end_date: z.date().optional(),
     end_time: z.string().optional(),
+
   })
   .refine(
     (data) => {
@@ -60,6 +63,8 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
     resolver: zodResolver(quizSchema),
     defaultValues: {
       course_name: "",
+      quiz_description: "",
+      status:"Active",
       start_date: undefined,
       start_time: "",
       end_date: undefined,
@@ -69,13 +74,15 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
 
   return (
     <Form {...form}>
-      <form
+      <div className="flex justify-center px-4">
+        <form
         onSubmit={form.handleSubmit(onSave)}
-        className="space-y-6 bg-cream-400 text-blue-500 rounded-lg p-6 md:p-10"
+        className="w-full max-w-2xl mx-auto bg-gray-300 dark:bg-[#0f172a] shadow-md rounded-lg p-6 md:p-10 space-y-6 text-gray-900 dark:text-white "
+
       >
         <div>
-          <h2 className="text-2xl font-bold text-cream-400">Quiz Info</h2>
-          <FormDescription>Enter Quiz details here</FormDescription>
+          <h2 className="text-3xl font-semibold text-indigo-900 dark:text-indigo-100 mb-2 ">Quiz Info</h2>
+          <FormDescription className="text-sm text-gray-500 dark:text-gray-300 m-4">Enter Quiz details here</FormDescription>
 
           {/* Course Name */}
           <FormField
@@ -84,6 +91,32 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Course Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          {/*Quiz Description */}
+          <FormField
+            control={form.control}
+            name="quiz_description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Quiz Description</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Quiz Status</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -111,7 +144,7 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
                           <Calendar1 className="ml-auto h-4 w-8 opacity-70" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-4" align="end" >
+                      <PopoverContent className="w-auto p-0 bg-white border rounded-md shadow-lg" align="end" >
                         <Calendar
                           className="rdp mx-1"
                           mode="single"
@@ -158,7 +191,7 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
                           <Calendar1 className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="end">
+                      <PopoverContent className="w-auto p-0 bg-white border rounded-md shadow-lg" align="end">
                         <Calendar
                         className="rdp mx-1"
                           mode="single"
@@ -194,12 +227,13 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
         ) : (
           <Button
             type="submit"
-            className="bg-blue-900 text-white hover:bg-blue-700"
+            className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded"
           >
             Submit
           </Button>
         )}
       </form>
+      </div>
     </Form>
   );
 };

@@ -8,7 +8,7 @@ const CreateQuiz = () => {
     const { CreateQuiz , isPending} = useCreateMyQuiz();
 
     const handleSave = async(data:QuizFormData) => {
-        const {course_name,start_date,start_time,end_date,end_time} = data;
+        const {course_name,start_date,start_time,end_date,end_time,quiz_description,status} = data;
 
         const toISO = (date? : Date, time? : string) => {
             if(!date) return undefined;
@@ -24,7 +24,9 @@ const CreateQuiz = () => {
         const payload : CreateQuizRequest = {
             course_name,
             start_datetime : toISO(start_date,start_time),
-            end_datetime : toISO(end_date,end_time)
+            end_datetime : toISO(end_date,end_time),
+            quiz_description : quiz_description || "" ,
+            status : status || "",
         };
 
         try{

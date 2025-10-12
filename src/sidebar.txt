@@ -1,0 +1,122 @@
+// sidebar-config.ts
+
+type Role = "Admin" | "Mentor" | "Candidate" | "Guest";
+
+type SidebarLink = {
+  label: string;
+  path: string;
+  icon?: JSX.Element; // Optional, use react-icons or ShadCN icons
+};
+
+export const sidebarLinks: Record<Role, SidebarLink[]> = {
+  Admin: [
+    { label: "Dashboard", path: "/admin" },
+    { label: "Manage Users", path: "/admin/users" },
+    { label: "Courses", path: "/admin/courses" },
+    { label: "Quizzes", path: "/admin/quizzes" },
+  ],
+  Mentor: [
+    { label: "Dashboard", path: "/mentor" },
+    { label: "My Courses", path: "/mentor/courses" },
+    { label: "Create Course", path: "/mentor/courses/create" },
+    { label: "My Quizzes", path: "/mentor/quizzes" },
+    { label: "Create Quiz", path: "/mentor/quizzes/create" },
+  ],
+  Candidate: [
+    { label: "Dashboard", path: "/candidate" },
+    { label: "Available Courses", path: "/candidate/courses" },
+    { label: "My Quizzes", path: "/candidate/quizzes" },
+  ],
+  Guest: [
+    { label: "Home", path: "/" },
+    { label: "Login", path: "/login" },
+    { label: "Register", path: "/register" },
+  ],
+};
+
+
+// components/Sidebar/Sidebar.tsx
+
+import { sidebarLinks } from "./sidebar-config";
+import { useLocation, Link } from "react-router-dom";
+import { useState } from "react";
+import { cn } from "@/lib/utils"; // ShadCN's className util
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react"; // optional
+
+type SidebarProps = {
+  role: "Admin" | "Mentor" | "Candidate" | "Guest";
+};
+
+export const Sidebar = ({ role }: SidebarProps) => {
+  const links = sidebarLinks[role];
+  const { pathname } = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <>
+      {/* Mobile sidebar */}
+      <div className="md:hidden p-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64">
+            <nav className="flex flex-col gap-2 mt-6">
+              {links.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    "px-4 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800",
+                    pathname === link.path && "bg-muted font-semibold"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "hidden md:flex flex-col h-screen border-r bg-white dark:bg-black p-4 transition-all duration-300",
+          collapsed ? "w-20" : "w-64"
+        )}
+      >
+        <div className="flex justify-between items-center mb-4">
+          {!collapsed && <h2 className="text-xl font-bold">Menu</h2>}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? "⏩" : "⏪"}
+          </Button>
+        </div>
+
+        <nav className="flex flex-col gap-2">
+          {links.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={cn(
+                "px-4 py-2 rounded hover:bg-muted",
+                pathname === link.path && "bg-muted font-semibold",
+                collapsed && "text-sm text-center"
+              )}
+            >
+              {collapsed ? link.label.charAt(0) : link.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
+  );
+};

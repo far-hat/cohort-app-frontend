@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import LoadingButton from "@/components/LoadingButton";
 
 // Zod schemas
 const optionSchema = z.object({
@@ -20,9 +21,9 @@ const optionSchema = z.object({
 });
 
 const questionSchema = z.object({
-  questionText: z.string().min(1, "Question is required"),
+  question_text: z.string().min(1, "Question is required"),
   options: z.array(optionSchema).min(2, "At least 2 options required").max(4),
-  correctAnswer: z.string().min(1, "Pick a correct answer"),
+  correct_answer: z.string().min(1, "Pick a correct answer"),
 });
 
 const formSchema = z.object({
@@ -33,17 +34,18 @@ export type QuestionData = z.infer<typeof formSchema>;
 
 type Props = {
   onSave: (questionData: QuestionData) => void;
+  isPending : boolean;
 };
 
-export const QuestionsForm = ({ onSave }: Props) => {
+export const QuestionsForm = ({ onSave,isPending }: Props) => {
   const form = useForm<QuestionData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       questions: [
         {
-          questionText: "",
+          question_text: "",
           options: [{ value: "" }, { value: "" }],
-          correctAnswer: "",
+          correct_answer: "",
         },
       ],
     },
@@ -77,9 +79,9 @@ export const QuestionsForm = ({ onSave }: Props) => {
     form.setValue(`questions.${qIndex}.options`, updatedOptions);
 
     // If correct answer was removed, clear it
-    const correctAnswer = form.getValues(`questions.${qIndex}.correctAnswer`);
+    const correctAnswer = form.getValues(`questions.${qIndex}.correct_answer`);
     if (correctAnswer === currentOptions[oIndex].value) {
-      form.setValue(`questions.${qIndex}.correctAnswer`, "");
+      form.setValue(`questions.${qIndex}.correct_answer`, "");
     }
   };
 
@@ -88,7 +90,6 @@ export const QuestionsForm = ({ onSave }: Props) => {
       <form
         onSubmit={form.handleSubmit(
           (data) => {
-            console.log("✅ Submitted data:", data);
             onSave(data);
           },
           (errors) => {
@@ -105,7 +106,7 @@ export const QuestionsForm = ({ onSave }: Props) => {
               {/* Question Text */}
               <FormField
                 control={form.control}
-                name={`questions.${qIndex}.questionText`}
+                name={`questions.${qIndex}.question_text`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Question {qIndex + 1}</FormLabel>
@@ -120,7 +121,7 @@ export const QuestionsForm = ({ onSave }: Props) => {
               {/* Options with correct answer selector */}
               <Controller
                 control={form.control}
-                name={`questions.${qIndex}.correctAnswer`}
+                name={`questions.${qIndex}.correct_answer`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Options</FormLabel>
@@ -219,9 +220,9 @@ export const QuestionsForm = ({ onSave }: Props) => {
           variant="outline"
           onClick={() =>
             addQuestion({
-              questionText: "",
+              question_text: "",
               options: [{ value: "" }, { value: "" }],
-              correctAnswer: "",
+              correct_answer: "",
             })
           }
         >
@@ -229,12 +230,15 @@ export const QuestionsForm = ({ onSave }: Props) => {
         </Button>
 
         {/* Submit Button */}
-        <Button
+        {
+          isPending ? (<LoadingButton/>) : 
+          (<Button
           type="submit"
           className="bg-blue-900 text-white hover:bg-blue-700"
         >
           Save Questions
-        </Button>
+        </Button>)
+        }
       </form>
     </Form>
   );
