@@ -7,12 +7,7 @@ export const NavMenu = ()=> {
     return(
         <NavigationMenu>
             <NavigationMenuList>
-                <NavigationMenuItem>
-                    <CoursesMenu />
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <QuizMenu />
-                </NavigationMenuItem>
+                
                 <NavigationMenuItem>
                     <UsernameMenu/>
                 </NavigationMenuItem>

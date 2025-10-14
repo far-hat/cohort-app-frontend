@@ -1,37 +1,33 @@
-import DashboardLayout from "@/components/DashboardLayout";
+import Layout from "../../layouts/Layout";
 import { SideBar } from "@/components/sidebar/Sidebar";
-import { useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 const MentorPage = () => {
-    const navigate = useNavigate();
-
     return (
-       <>
-        
-        <DashboardLayout>
-            <div className="p-10 space-y-8">
+        <Layout>
+            <div className="min-h-screen flex">
+                
+                <div className="flex-shrink-0">
+                    <SideBar role={"Mentor"} />
+                </div>
+                
+               
+                <div className="flex-1 p-8 bg-gray-50">
+                   
+                    <div className="mb-8 text-center">
+                        <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome Mentor</h1>
+                        <p className="text-xl text-gray-600 mb-4">Create quizzes, view quizzes.</p>
+                       
+                    </div>
 
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-                <h1 className="text-3xl font-bold mb-2"> Welcome Mentor </h1>
-                <p className="text-gray-700"> Create quizzes,view quizzes.</p>
+                   
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                        <Outlet /> 
+                    </div>
+                </div>
             </div>
-            <div className="flex justify-center gap-6">
-                <button
-                    className="px-6 py-2 bg-green-800 text-white rounded hover:bg-green-900"
-                    onClick={() => navigate("/get-quiz-list")}
-                >
-                    View Quizzes
-                </button>
-                <button
-                    className="px-6 py-2 bg-blue-800 text-white rounded hover:bg-blue-900"
-                    onClick={() => navigate("/create-quiz")}
-                >
-                    Create Quizzes
-                </button>
-            </div>
-        </div>
-        </DashboardLayout>
-       </>
+        </Layout>
     );
 };
+
 export default MentorPage;

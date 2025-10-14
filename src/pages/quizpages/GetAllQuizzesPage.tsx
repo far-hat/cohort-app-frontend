@@ -1,6 +1,6 @@
 import QuizListInfo from "./QuizListInfo"
 
-import {useGetAllQuizzes,type QuizResponse} from "../../api/QuizApi"
+import {useGetAllQuizzes} from "../../api/QuizApi"
 
 
 const GetQuizListPage = () => {

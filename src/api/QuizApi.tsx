@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -59,7 +60,7 @@ export const useGetAllQuizzes = () => {
     const getAllQuizzesRequest = async() : Promise<QuizResponse[]> => {
         const response = await fetch(`${API_BASE_URL}/api/quiz/getAll`, {
             method: "GET",
-        })
+        });
 
         if(!response){
             throw new Error("Failed to get quizzes");
@@ -70,11 +71,41 @@ export const useGetAllQuizzes = () => {
 
 const { data: quizzes, isPending } = useQuery<QuizResponse[], Error>(
     {
-  queryKey: ["quizzes"],
+  queryKey: ["all-quizzes"],
   queryFn: getAllQuizzesRequest,
 }
   );
     return{ quizzes,isPending}
 
+}
+
+
+export const useGetMyQuizzes = () => {
+    const {getAccessTokenSilently} = useAuth0();
+    const getMyQuizzesRequest = async() : Promise<QuizResponse[]> => {
+        const accessToken = await getAccessTokenSilently();
+        const response = await fetch(`${API_BASE_URL}/api/quiz/my_quizzes` , {
+            method : "GET",
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        if(!response){
+            throw new Error("Failed to get quizzes");
+        }
+
+        return response.json();
+    };
+
+    const { data : quizzes , isPending } = useQuery<QuizResponse [] , Error> ( {
+        queryKey : ["my-quizzes"],
+        queryFn : getMyQuizzesRequest,
+    });
+
+    return {
+        quizzes,
+        isPending
+    }
 }
 

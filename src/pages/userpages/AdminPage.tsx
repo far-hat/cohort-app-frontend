@@ -1,13 +1,13 @@
 import { useState } from "react";
-import GetQuizListPage from "../quizpages/GetQuizListPage";
+import GetQuizListPage from "../quizpages/GetAllQuizzesPage";
 import MentorsList from "./MentorsList";
 import CandidatesList from "./CandidatesList";
-import DashboardLayout from "@/components/DashboardLayout";
+import Layout from "@/layouts/Layout";
 
 const AdminPage = ()=> {
     const [activeSession,setActiveSession] = useState<"quizzes" | "mentors" | "candidates" | null>(null);
     return (
-        <DashboardLayout >
+        <Layout >
             <div className="p-8 space-y-8">
             <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
                 <h1 className="text-3xl font-bold mb-2"> Welcome Admin </h1>
@@ -30,7 +30,7 @@ const AdminPage = ()=> {
                 {activeSession === "candidates" && <CandidatesList/>}
             </div>
         </div>
-        </DashboardLayout>
+        </Layout>
     )
 }
 export default AdminPage;

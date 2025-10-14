@@ -31,7 +31,7 @@ const CreateQuiz = () => {
 
         try{
             await CreateQuiz(payload).then((quiz)=> {
-                navigate(`/create-quiz/${quiz.quiz_id}/questions`)
+                navigate(`/mentor/create-quiz/${quiz.quiz_id}/questions`)
             })
         }
         catch(error){

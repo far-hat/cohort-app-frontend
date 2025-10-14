@@ -1,4 +1,4 @@
-import heroImage2 from "../assets/heroImage2.webp"
+import heroImage2 from "../assets/cohortHero.png"
 
 const Hero = () => {
   return (

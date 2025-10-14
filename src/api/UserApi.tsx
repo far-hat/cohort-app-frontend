@@ -64,3 +64,19 @@ export const useCreateUserRequest = () => {
     
   };
 };
+
+type UpdateMentorRequest = {
+  full_name : string;
+  phone : string;
+  expertise : string;
+}
+
+export const useUpdateMentorRequest = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const updateMentorRequest = async ( user : UpdateMentorRequest) =>{
+    
+  }
+
+
+}
