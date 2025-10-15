@@ -31,22 +31,22 @@ const AppRoute = () => {
             }
             />
 
-            
+
             <Route path="/mentor" element={
                 <RoleProtectedRoutes allowedRoles={["Mentor"]}>
-                    <MentorPage /> 
+                    <MentorPage />
                 </RoleProtectedRoutes>
             }>
-                
+
                 <Route index element={<MentorHomeContent />} />
                 <Route path="quizzes" element={<GetMyQuizListPage />} />
                 <Route path="courses" element={<CoursesMenu />} />
                 <Route path="create-quiz" element={<CreateQuiz />} />
                 <Route path="create-quiz/:quizId/questions" element={<QuestionPage />} />
-                <Route path="quizpage/:quizId" element={<QuizDetailPage/>}/>
+                <Route path="quizpage/:quizId" element={<QuizDetailPage />} />            
             </Route>
 
-            
+
             <Route path="/candidate" element={<RoleProtectedRoutes allowedRoles={["Candidate"]}>
                 <CandidatePage />
             </RoleProtectedRoutes>
@@ -55,12 +55,12 @@ const AppRoute = () => {
 
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-           
-            <Route path="/get-quiz-list" element={<RoleProtectedRoutes allowedRoles={["Admin", "Candidate","Mentor"]}><GetQuizListPage /></RoleProtectedRoutes>} />
-            
+
+            <Route path="/get-quiz-list" element={<RoleProtectedRoutes allowedRoles={["Admin", "Candidate", "Mentor"]}><GetQuizListPage /></RoleProtectedRoutes>} />
+
             <Route path="/get-quiz-list/:quizId" element={<RoleProtectedRoutes allowedRoles={["Admin"]}><QuizDetailPage /></RoleProtectedRoutes>} />
 
-            <Route path="/get-quiz-list/quiz-page" element={<RoleProtectedRoutes allowedRoles={["Candidate","Mentor"]}> <QuizAttemptPage onSave={(data) => {
+            <Route path="/get-quiz-list/quiz-page" element={<RoleProtectedRoutes allowedRoles={["Candidate", "Mentor"]}> <QuizAttemptPage onSave={(data) => {
                 console.log("Quiz responses:", data);
             }}
                 isPending={false} /></RoleProtectedRoutes>}

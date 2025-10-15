@@ -26,7 +26,7 @@ export const useAddQuestions = (quizId : string) => {
         });
 
         if(!response.ok){
-            const errorText = await response.text(); // or .json() if backend sends JSON
+            const errorText = await response.text(); 
             throw new Error(`HTTP ${response.status}: ${errorText}`);        }
 
         return response.json();
