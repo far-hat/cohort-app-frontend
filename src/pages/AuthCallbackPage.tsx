@@ -16,6 +16,7 @@ const AuthCallbackPage = () => {
   >(null);
 
   useEffect(() => {
+    
     if (isLoading || !user) return;
 
     const detectedRoles = user?.["http://localhost:5173/roles"] || [];

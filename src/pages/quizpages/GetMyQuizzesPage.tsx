@@ -14,9 +14,8 @@ const GetMyQuizListPage = () => {
         return <span>No data found!</span>
     }
     return(
-        <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-3">
-            <div id="quiz-list"></div>
-            <div id="main-content" className="flex flex-col gap-5">
+        <div className="">
+            <div id="main-content" >
                 <QuizListInfo 
                 quizzes = {quizzes ?? []}
                 isPending={isPending}/>
