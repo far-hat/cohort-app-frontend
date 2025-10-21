@@ -7,7 +7,7 @@ type Props = {
     allowedRoles: string[];
 };
 
-function getUserRoles(user: any): string[] {
+export function getUserRoles(user: any): string[] {
     return user?.["http://localhost:5173/roles"] || [];
 }
 
@@ -18,8 +18,7 @@ const RoleProtectedRoutes = ({ children, allowedRoles }: Props) => {
 
     console.log("User Object:", user);
 
-    if (!isAuthenticated) return <Navigate to="/" replace />; // redirect to home/login
-
+    if (!isAuthenticated) return <Navigate to="/" replace />; 
     const roles = getUserRoles(user);
     console.log("Roles:", roles);
 

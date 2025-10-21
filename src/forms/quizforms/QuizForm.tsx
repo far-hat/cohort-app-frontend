@@ -56,7 +56,10 @@ const quizSchema = z
   );
 
 export type QuizFormData = z.infer<typeof quizSchema>;
-type Props = { onSave: (QuizData: QuizFormData) => void; isPending: boolean };
+type Props = { onSave: (QuizData: QuizFormData) => void; 
+isPending: boolean,
+isEdit? : boolean,
+initialData? : QuizFormData };
 
 export const QuizForm = ({ onSave, isPending }: Props) => {
   const form = useForm<QuizFormData>({
@@ -150,7 +153,7 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -197,7 +200,7 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>

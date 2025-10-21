@@ -6,7 +6,7 @@ import CreateQuiz from "./pages/quizpages/QuizPage";
 import QuestionPage from "./pages/quizpages/QuestionPage";
 import GetQuizListPage from "./pages/quizpages/GetAllQuizzesPage";
 import QuizDetailPage from "./pages/quizpages/QuizDetailPage";
-import QuizAttemptPage from "./pages/quizpages/QuizAttemptPage";
+import QuizAttempt from "./pages/quizpages/QuizAttemptPage";
 import RoleProtectedRoutes from "./RoleProtectedRoutes";
 import AdminPage from "./pages/userpages/AdminPage";
 import MentorPage from "./pages/userpages/MentorPage";
@@ -15,6 +15,10 @@ import UnauthorizedPage from "./pages/userpages/UnauthorizedPage";
 import GetMyQuizListPage from "./pages/quizpages/GetMyQuizzesPage";
 import { CoursesMenu } from "./components/CoursesMenu";
 import { MentorHomeContent } from "./pages/userpages/MentorHomeContent";
+import { QuizEditPage } from "./pages/quizpages/QuizEditPage";
+import { CandidateHomeContent } from "./pages/userpages/CandidateHomeContext";
+import QuizAttemptPage from "./pages/quizpages/QuizAttemptPage";
+import { MentorRegistrationForm } from "./forms/userforms/UserProfileForm";
 const AppRoute = () => {
     return (
         <Routes>
@@ -39,19 +43,27 @@ const AppRoute = () => {
             }>
 
                 <Route index element={<MentorHomeContent />} />
+                <Route path="profile" element={<MentorRegistrationForm/>}/>
                 <Route path="quizzes" element={<GetMyQuizListPage />} />
                 <Route path="courses" element={<CoursesMenu />} />
                 <Route path="create-quiz" element={<CreateQuiz />} />
                 <Route path="create-quiz/:quizId/questions" element={<QuestionPage />} />
-                <Route path="quizpage/:quizId" element={<QuizDetailPage />} />            
+                <Route path="quizpage/:quizId" element={<QuizDetailPage />} />  
+                <Route path="edit-quiz/:quizId" element={<QuizEditPage />} />            
             </Route>
 
 
-            <Route path="/candidate" element={<RoleProtectedRoutes allowedRoles={["Candidate"]}>
+            <Route path="/candidate" element={ 
+                <RoleProtectedRoutes allowedRoles={["Candidate"]}>
                 <CandidatePage />
             </RoleProtectedRoutes>
-            }
-            />
+            }>
+                <Route index element={<CandidateHomeContent />} />
+                <Route path="courses" element={<CoursesMenu/>}/>
+                <Route path="quizzes" element={<GetQuizListPage/>} />
+                <Route path="attempt-quiz/:quizId" element={<QuizAttemptPage/>}/>
+            </Route>
+           
 
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
@@ -60,11 +72,7 @@ const AppRoute = () => {
 
             <Route path="/get-quiz-list/:quizId" element={<RoleProtectedRoutes allowedRoles={["Admin"]}><QuizDetailPage /></RoleProtectedRoutes>} />
 
-            <Route path="/get-quiz-list/quiz-page" element={<RoleProtectedRoutes allowedRoles={["Candidate", "Mentor"]}> <QuizAttemptPage onSave={(data) => {
-                console.log("Quiz responses:", data);
-            }}
-                isPending={false} /></RoleProtectedRoutes>}
-            />
+            
         </Routes>
     )
 }

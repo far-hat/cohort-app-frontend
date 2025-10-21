@@ -4,9 +4,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { getUserRoles } from "@/RoleProtectedRoutes";
+
 
 const UsernameMenu = () => {
     const {user , logout} =useAuth0();
+    const role = getUserRoles(user);
+    const userRole=role[0].toLowerCase();
     return(
         <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center p-10 hover:text-green-700 font-bold gap-2">
@@ -15,7 +19,7 @@ const UsernameMenu = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-gray-300">
                 <DropdownMenuItem>
-                    <Link to="/user-profile" 
+                    <Link to={`http://localhost:5173/${userRole}/profile`} 
                 className="font-bold hover:text-green-700">Profile</Link>
                 </DropdownMenuItem>
                 <Separator/>

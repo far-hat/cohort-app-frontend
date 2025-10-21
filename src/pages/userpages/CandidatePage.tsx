@@ -1,21 +1,23 @@
 
+import { SideBar } from "@/components/sidebar/Sidebar";
 import Layout from "@/layouts/Layout";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const CandidatePage = () => {
-    const navigate = useNavigate();
     return (
          <Layout>
-            <div className="p-8 space-y-8">
-             <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-                <h1 className="font-bold text 3xl mb-2">Welcome Candidate</h1>
-                <p className="font-semibold">View available courses, quizzes and result </p>
-             </div>
-            <div className="flex justify-cente gap-6">
-                <button className="px-6 py-2 bg-green-800 text-white rounded-hover" >View Courses</button>
-                <button className="px-6 py-2 bg-green-800 text-white rounded-hover" onClick={()=> navigate("/get-quiz-list")}>View Quizzes</button>
-                <button className="px-6 py-2 bg-green-800 text-white rounded-hover" >View Results</button>
-            </div>
+            <div className="min-h-screen flex">
+             <div className="flex-shrink-0">
+                                 <SideBar role={"Candidate"} />
+                             </div>
+            <div className="mb-8 text-center">
+                        <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome Candidate</h1>
+                        <p className="text-xl text-gray-600 mb-4">View available Courses and Register Course of your choice.View and attempt quizzes.</p>
+                        <Outlet /> 
+                    </div>
+
+                   
+                    
          </div>
          </Layout>
     )

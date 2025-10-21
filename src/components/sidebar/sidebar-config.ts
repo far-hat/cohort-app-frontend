@@ -21,11 +21,10 @@ export const sideBarLinks : Record<Role, SideBarLink[]> = {
         { label: "Quiz", path: "/mentor/quizzes" ,icon:"icon"},
     ],
     Candidate : [
-        { label : "Dashboard" , path : "/candidate-dashboard" , icon: "icon" },
-        { label : "Register for Course" , path : "/register-course" , icon: "icon" },
-        { label : "View Available Courses" , path : "/view-courses" , icon : "icon" },
-        { label : "View Available Quizzes" , path : "/view-quizzes" , icon :"icon" },
-        { label : "View Result" , path : "/view-result" , icon : "icon" },
+        { label : "Home" , path : "/candidate" , icon: "icon" },
+        { label : "Courses" , path : "/candidate/courses" , icon: "icon" },
+        { label : "Quizzes" , path : "/candidate/quizzes" , icon :"icon" },
+        { label : "Result" , path : "/candidate/results" , icon : "icon" },
     ],
     Guest : [
         { label : "Dashboard" , path : "/guest-dashboard" , icon: "icon" },

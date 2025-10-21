@@ -1,4 +1,4 @@
-import QuizAttemptPage from "@/pages/quizpages/QuizAttemptPage";
+
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -48,8 +48,34 @@ export type Options = {
     question_id : number
 }
 
+export type QuizSubmission = {
+    quizId: number;
+    responses: Record<string, string>; 
+};
 
+export const useSubmitQuizAttempt = () => {
+    const submitQuizAttemptRequest = async (submission: QuizSubmission): Promise<{ message: string }> => {
+        const response = await fetch(`${API_BASE_URL}/api/quiz/submit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(submission),
+        });
 
+        if (!response.ok) {
+            throw new Error("Failed to submit quiz");
+        }
+
+        return response.json();
+    };
+
+    const { mutateAsync: submitQuiz, isPending, isError, isSuccess } = useMutation({
+        mutationFn: submitQuizAttemptRequest,
+    });
+
+    return { submitQuiz, isPending, isError, isSuccess };
+}
 
 
 
@@ -146,7 +172,7 @@ export const useGetQuizById = (quizId : number) => {
         const response = await fetch(`${API_BASE_URL}/api/quiz/view-quiz/${quizId}`, {
             method : "GET",
             headers : {
-                "Content-Type" : "applicaation/json",
+                "Content-Type" : "application/json",
             }
         })
         if(!response) {
@@ -163,3 +189,56 @@ export const useGetQuizById = (quizId : number) => {
 
     return{quiz,isPending,Error};
 }
+
+export const useDeleteQuizById = () => {
+    const deleteQuizByIdRequest = async(quizId : number) => {
+        const response = await fetch(`${API_BASE_URL}/api/quiz/delete/${quizId}` , {
+            method : "DELETE",
+            headers : {
+                "Content-type" : "application/json"
+            }
+        });
+        if(!response) {
+            throw new Error("Failed to delete quiz");
+        }
+        return response.json();
+    };
+
+    const { mutateAsync : deleteQuiz , isPending, isError , isSuccess} = useMutation< {message : "string"},
+    Error, number
+    >({
+        mutationFn : deleteQuizByIdRequest,
+    });
+
+    return { deleteQuiz , isPending, isError, isSuccess };
+}
+
+
+export const useUpdateQuizById = () => {
+    const updatedQuizByIdRequest = async ({quizId , quizData}:{quizId : number, quizData :CreateQuizRequest}) :Promise<QuizResponse> => {
+        const response = await fetch(`${API_BASE_URL}/api/quiz/edit/${quizId}` , {
+            method: "PUT",
+            headers : {
+                "Content-type" : "application/json"
+            },
+            body : JSON.stringify(quizData)
+        });
+
+        if(!response){
+            throw new Error("Failed to update quiz");
+        }
+
+        return response.json();
+    }
+
+    const { mutateAsync : updateQuiz, isPending, isError, isSuccess} = useMutation<QuizResponse,Error,{quizId : number; quizData :CreateQuizRequest}>({
+        mutationFn : updatedQuizByIdRequest,
+    });
+
+    return{
+        updateQuiz,
+        isPending,
+        isError,
+        isSuccess
+    };
+};
