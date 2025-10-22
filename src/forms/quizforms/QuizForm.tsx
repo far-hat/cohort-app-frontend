@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar1 } from "lucide-react";
+import { useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -59,12 +60,13 @@ export type QuizFormData = z.infer<typeof quizSchema>;
 type Props = { onSave: (QuizData: QuizFormData) => void; 
 isPending: boolean,
 isEdit? : boolean,
-initialData? : QuizFormData };
+initialData? : QuizFormData 
+};
 
-export const QuizForm = ({ onSave, isPending }: Props) => {
+export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
   const form = useForm<QuizFormData>({
     resolver: zodResolver(quizSchema),
-    defaultValues: {
+    defaultValues: isEdit ? initialData : {
       course_name: "",
       quiz_description: "",
       status:"Active",
@@ -74,6 +76,12 @@ export const QuizForm = ({ onSave, isPending }: Props) => {
       end_time: "",
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData, form]);
 
   return (
     <Form {...form}>
