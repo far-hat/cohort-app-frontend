@@ -24,34 +24,35 @@ export const QuizAttemptForm = ({ onSave, isPending }: Props) => {
     const [quesIndex, setIndex] = useState(0);
     const [hasStarted, setHasStarted] = useState(false);
 
-   
     const { quiz, isPending: isQuizLoading } = useGetQuizById(Number(quizId));
     
+    const questionArray = quiz?.questions || [];
+    const defaultValues: Record<string, string> = {};
+    
+    if (quiz && questionArray.length > 0) {
+        questionArray.forEach(ques => {
+            defaultValues[ques.question_id.toString()] = ""; 
+        });
+    }
 
-    if (isQuizLoading ) {
+    const form = useForm<QuizForm>({
+        resolver: zodResolver(attemptSchema),
+        defaultValues,
+    });
+
+    if (isQuizLoading) {
         return <div className="flex justify-center p-8">Loading quiz...</div>;
     }
 
     if (!quiz) {
         return <span>Quiz not found</span>;
     }
-    const questionArray = quiz.questions || [];
-    
-    if (!questionArray || questionArray.length === 0) {
+
+    if (questionArray.length === 0) {
         return <span>No questions available for this quiz</span>;
     }
 
     const question = questionArray[quesIndex];
-
-    const defaultValues: Record<string, string> = {};
-    questionArray.forEach(ques => {
-        defaultValues[ques.question_id.toString()] = ""; 
-    });
-
-    const form = useForm<QuizForm>({
-        resolver: zodResolver(attemptSchema),
-        defaultValues,
-    });
 
     const handleNextQuestion = () => {
         if (quesIndex < questionArray.length - 1) {

@@ -54,13 +54,13 @@ export type QuizSubmission = {
 };
 
 export const useSubmitQuizAttempt = () => {
-    const submitQuizAttemptRequest = async (submission: QuizSubmission): Promise<{ message: string }> => {
-        const response = await fetch(`${API_BASE_URL}/api/quiz/submit`, {
+    const submitQuizAttemptRequest = async ({quizId,responses} :QuizSubmission): Promise<{ message: string }> => {
+        const response = await fetch(`${API_BASE_URL}/api/quiz/attempt/${quizId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(submission),
+            body: JSON.stringify({responses}),
         });
 
         if (!response.ok) {

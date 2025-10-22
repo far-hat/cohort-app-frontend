@@ -18,7 +18,7 @@ import { MentorHomeContent } from "./pages/userpages/MentorHomeContent";
 import { QuizEditPage } from "./pages/quizpages/QuizEditPage";
 import { CandidateHomeContent } from "./pages/userpages/CandidateHomeContext";
 import QuizAttemptPage from "./pages/quizpages/QuizAttemptPage";
-import { MentorRegistrationForm } from "./forms/userforms/UserProfileForm";
+import { CandidateRegistrationForm, MentorRegistrationForm } from "./forms/userforms/UserProfileForm";
 const AppRoute = () => {
     return (
         <Routes>
@@ -62,6 +62,7 @@ const AppRoute = () => {
                 <Route path="courses" element={<CoursesMenu/>}/>
                 <Route path="quizzes" element={<GetQuizListPage/>} />
                 <Route path="attempt-quiz/:quizId" element={<QuizAttemptPage/>}/>
+                <Route path="profile" element={<CandidateRegistrationForm/>}/>
             </Route>
            
 

@@ -106,3 +106,44 @@ export const useUpdateMentorRequest = () => {
     isSuccess 
   };
 };
+
+
+export type UpdateCandidateRequest = {
+  full_name: string;
+  phone: string;
+  education_level: string;
+  role: string;
+};
+
+export const useUpdateCandidateRequest = () => {
+  const {getAccessTokenSilently} =useAuth0();
+
+  const updateCandidateRequest = async (userData: UpdateCandidateRequest): Promise<any> => {
+    const accessToken = await getAccessTokenSilently();
+    const response = await fetch(`${API_BASE_URL}/api/user/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization : `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update user role");
+    }
+
+    return response.json();
+  };
+
+  const { mutateAsync: updateCandidate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: updateCandidateRequest,
+  });
+
+  return { 
+    updateCandidate, 
+    isPending, 
+    isError, 
+    isSuccess 
+  };
+};

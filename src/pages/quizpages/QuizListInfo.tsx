@@ -49,7 +49,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   }
 
   const handleViewClick = (quizId: number) => {
-    if (role === "Mentor") {
+    if (role === "mentor") {
       navigate(`/mentor/quizpage/${quizId}`)
     } else {
       navigate(`/candidate/quizpage/${quizId}`);
@@ -57,7 +57,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   }
 
   const handleDeleteClick = async (quizId: number) => {
-    if (role === "Mentor") {
+    if (role === "mentor") {
       try {
         await deleteQuiz(quizId);
         navigate(`/mentor`);
@@ -77,7 +77,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
 
   return (
     <div className="m-4">
-      {role === "Mentor" && (
+      {role === "mentor" && (
         <div className="sticky top-0 bg-white py-4 z-10 border-b">
           <Button
             onClick={handleCreateQuiz}
@@ -90,7 +90,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
       
       <div className="flex justify-between items-center mb-6 px-2">
         <h2 className="text-2xl font-bold">
-          {role === "Mentor" ? "My Quizzes" : "Available Quizzes"}
+          {role === "mentor" ? "My Quizzes" : "Available Quizzes"}
         </h2>
       </div>
 
@@ -134,7 +134,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      {role === "Mentor" ? (
+                      {role === "mentor" ? (
                         <>
                           <Button size="sm" variant="outline" onClick={() => handleViewClick(quiz.quiz_id)}>
                             View
