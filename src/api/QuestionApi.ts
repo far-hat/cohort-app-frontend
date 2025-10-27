@@ -27,8 +27,7 @@ export const useAddQuestions = (quizId : string) => {
         });
 
         if(!response.ok){
-            const errorText = await response.text(); 
-            throw new Error(`HTTP ${response.status}: ${errorText}`);        }
+            throw new Error("Failed to add questions");      }
 
         return response.json();
     };
@@ -50,3 +49,50 @@ export const useAddQuestions = (quizId : string) => {
     }
 }
 
+export type EditQuestionsRequest = {
+  questions: Array<{
+    question_id?: number;
+    question_text: string;
+    options: Array<{
+      option_id?: number;
+      option_text: string;
+      correct_option: boolean;
+    }>;
+  }>;
+}
+export const useEditQuestions = () => {
+    const EditQuestionsRequest = async ({quizId,questions} : {quizId : string, questions : EditQuestionsRequest}) : Promise<any> => {
+        if(!quizId) throw new Error("quizId is missing from route params");
+
+        const response = await fetch(`${API_BASE_URL}/api/quiz/${quizId}/questions/edit`, {
+            method : "PUT",
+            headers : {
+                "Content-Type" : "application/json",
+                
+            },
+            body : JSON.stringify(questions.questions)
+        });
+
+        if(!response.ok){
+            throw new Error("Failed to edit questions"); 
+        }
+
+        return response.json();
+    };
+
+    const {
+        mutateAsync :editQuestions,
+        isPending,
+        isError,
+        isSuccess
+    } = useMutation({
+        mutationFn : EditQuestionsRequest
+    });
+
+    return{
+        editQuestions,
+        isPending,
+        isError,
+        isSuccess
+    }
+}

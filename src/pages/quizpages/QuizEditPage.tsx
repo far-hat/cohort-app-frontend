@@ -1,14 +1,23 @@
 import { CreateQuizRequest, Quiz, useGetQuizById, useUpdateQuizById } from "@/api/QuizApi";
 import { QuizForm, QuizFormData } from "@/forms/quizforms/QuizForm";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export const QuizEditPage = () => {
+  const navigate = useNavigate();
   const { quizId } = useParams();
   const { quiz, isPending: isLoading } = useGetQuizById(Number(quizId));
-  const { updateQuiz, isPending: isUpdating } = useUpdateQuizById();
+  const { updateQuiz, isPending: isUpdating ,isSuccess} = useUpdateQuizById();
   
   const initialData = quiz ? convertQuizToFormData(quiz) : undefined;
 
+  useEffect( ()=> {
+    if(isSuccess){
+      toast.success("Quiz updated successfully!");
+      navigate('`/mentor/edit-quiz/${quiz.quiz_id}/questions`');
+    }
+  },[isSuccess,navigate])
   const handleSave = (formData: QuizFormData) => {
     
     const quizData: CreateQuizRequest = {

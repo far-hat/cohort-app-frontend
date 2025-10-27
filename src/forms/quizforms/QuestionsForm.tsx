@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import LoadingButton from "@/components/LoadingButton";
+import { useEffect } from "react";
 
 // Zod schemas
 const optionSchema = z.object({
@@ -35,12 +36,14 @@ export type QuestionData = z.infer<typeof formSchema>;
 type Props = {
   onSave: (questionData: QuestionData) => void;
   isPending : boolean;
+  initialData? : QuestionData;
+  isEdit? : boolean;
 };
 
-export const QuestionsForm = ({ onSave,isPending }: Props) => {
+export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Props) => {
   const form = useForm<QuestionData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       questions: [
         {
           question_text: "",
@@ -51,6 +54,12 @@ export const QuestionsForm = ({ onSave,isPending }: Props) => {
     },
   });
 
+  useEffect( ()=> {
+    if(initialData){
+      form.reset(initialData);
+    }
+  },[initialData,form]);
+
   const {
     fields: questionFields,
     append: addQuestion,
@@ -60,13 +69,13 @@ export const QuestionsForm = ({ onSave,isPending }: Props) => {
     name: "questions",
   });
 
-  // ✅ Watch all questions once (no hooks inside map!)
+ 
   const watchedQuestions = useWatch({
     control: form.control,
     name: "questions",
   });
 
-  // Option management
+ 
   const addOption = (qIndex: number) => {
     const currentOptions = form.getValues(`questions.${qIndex}.options`);
     form.setValue(`questions.${qIndex}.options`, [...currentOptions, { value: "" }]);
@@ -78,7 +87,7 @@ export const QuestionsForm = ({ onSave,isPending }: Props) => {
 
     form.setValue(`questions.${qIndex}.options`, updatedOptions);
 
-    // If correct answer was removed, clear it
+    //remove if correct answer was cleared
     const correctAnswer = form.getValues(`questions.${qIndex}.correct_answer`);
     if (correctAnswer === currentOptions[oIndex].value) {
       form.setValue(`questions.${qIndex}.correct_answer`, "");
@@ -93,11 +102,15 @@ export const QuestionsForm = ({ onSave,isPending }: Props) => {
             onSave(data);
           },
           (errors) => {
-            console.warn("❌ Validation errors:", errors);
+            console.warn(" Validation errors:", errors);
           }
         )}
         className="space-y-8"
       >
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">{isEdit? `Edit Questions` : `Add Questions`}</h2>
+        </div>
+
         {questionFields.map((q, qIndex) => {
           const currentOptions = watchedQuestions?.[qIndex]?.options || [];
 
@@ -236,7 +249,7 @@ export const QuestionsForm = ({ onSave,isPending }: Props) => {
           type="submit"
           className="bg-blue-900 text-white hover:bg-blue-700"
         >
-          Save Questions
+          {isEdit ? `Update Questions`:`Save Questions`}
         </Button>)
         }
       </form>
