@@ -70,7 +70,7 @@ export const useEditQuestions = () => {
                 "Content-Type" : "application/json",
                 
             },
-            body : JSON.stringify(questions.questions)
+            body : JSON.stringify(questions)
         });
 
         if(!response.ok){

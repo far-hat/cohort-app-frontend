@@ -15,7 +15,7 @@ export const QuizEditPage = () => {
   useEffect( ()=> {
     if(isSuccess){
       toast.success("Quiz updated successfully!");
-      navigate('`/mentor/edit-quiz/${quiz.quiz_id}/questions`');
+      navigate(`/mentor/edit-quiz/${quizId}/questions`);
     }
   },[isSuccess,navigate])
   const handleSave = (formData: QuizFormData) => {
