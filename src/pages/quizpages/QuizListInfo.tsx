@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useDeleteQuizById } from "@/api/QuizApi";
+import { useState } from "react";
+import { CandidateQuizWatcher } from "@/components/CandidateQuizWatcher";
 
 type Quiz = {
   quiz_id: number;
@@ -13,20 +15,23 @@ type Quiz = {
   mentor_id?: number;
 };
 
-type Props = {
+export type Props = {
   quizzes: Quiz[];
   isPending: boolean;
   role: string;
 };
 
 const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
+
   const navigate = useNavigate();
+
   const { deleteQuiz, isPending: isDeleting } = useDeleteQuizById();
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  const [deletingId,setDeletingId] = useState<number | null>(null);
+  
 
+  
+/* ============= UTIL functions ============*/
   const formatDateOnly = (isoDate?: string) => {
     if (!isoDate) return "N/A";
     const date = new Date(isoDate);
@@ -44,6 +49,8 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
     });
   };
 
+  // ============= ACTIONS ==================
+
   const handleCreateQuiz = () => {
     navigate("/mentor/create-quiz");
   }
@@ -57,14 +64,17 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   }
 
   const handleDeleteClick = async (quizId: number) => {
-    if (role === "mentor") {
-      try {
+    if (role !== "mentor") return;
+    try {
+        setDeletingId(quizId);
         await deleteQuiz(quizId);
         navigate(`/mentor`);
       } catch (error) {
         console.log("Error deleting quiz", error);
+      }finally{
+        setDeletingId(null);
       }
-    }
+    
   }
 
   const handleAttemptClick = (quizId: number) => {
@@ -74,9 +84,15 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   const handleEditClick = (quizId: number) => {
     navigate(`/mentor/edit-quiz/${quizId}`);
   }
-
+  // ===================== UI ===============
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
   return (
     <div className="m-4">
+      {/* Candidate Quiz watcher*/}
+      {role === "candidate" && <CandidateQuizWatcher quizzes={quizzes}/>}
+      {/* Mentor Create quiz button */}
       {role === "mentor" && (
         <div className="sticky top-0 bg-white py-4 z-10 border-b">
           <Button
@@ -94,7 +110,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
         </h2>
       </div>
 
-      <div className="rounded-md border w-full">
+      <div className="rounded-md border w-full overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-gray-50">
             <TableRow>
@@ -116,47 +132,49 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   )} mins`
                 : "N/A";
 
+
               return (
-                <TableRow key={quiz.quiz_id} className="hover:bg-gray-100">
+                <TableRow 
+                key={quiz.quiz_id} 
+                className="hover:bg-gray-100"
+                >
+
                   <TableCell className="font-semibold">{quiz.course_name}</TableCell>
                   <TableCell className="font-semibold">{quiz.quiz_description}</TableCell>
                   <TableCell className="font-semibold">{formatDateOnly(quiz.start_datetime)}</TableCell>
                   <TableCell className="font-semibold">{formatTimeOnly(quiz.start_datetime)}</TableCell>
                   <TableCell className="font-semibold">{duration}</TableCell>
+
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       quiz.status === 'Active'
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        : 'bg-gray-100 text-gray-700'
                     }`}>
                       {quiz.status}
                     </span>
                   </TableCell>
+
                   <TableCell>
-                    <div className="flex space-x-2">
-                      {role === "mentor" ? (
-                        <>
-                          <Button size="sm" variant="outline" onClick={() => handleViewClick(quiz.quiz_id)}>
-                            View
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleEditClick(quiz.quiz_id)}>
-                            Edit
-                          </Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(quiz.quiz_id)}>
-                            Delete
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white"
-                          onClick={() => handleAttemptClick(quiz.quiz_id)}
-                          disabled={quiz.status !== 'Active'}
-                        >
-                          Attempt Quiz
+                    {role === "mentor" ? (
+                       <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => handleViewClick(quiz.quiz_id)}>View</Button>
+                        <Button size="sm" variant="outline" onClick={() => handleEditClick(quiz.quiz_id)}>Edit</Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(quiz.quiz_id)}>
+                          Delete
                         </Button>
-                      )}
-                    </div>
+                      </div>
+                    ) 
+                    : (
+                      <Button
+                        size="sm"
+                        disabled={quiz.status !== "Active"}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        onClick={() => handleAttemptClick(quiz.quiz_id)}
+                      >
+                        Attempt Quiz
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               );

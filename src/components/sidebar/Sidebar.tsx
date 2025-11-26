@@ -3,6 +3,8 @@ import { sideBarLinks } from "./sidebar-config";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Menu } from "lucide-react";
 
 type SideBarProps = {
     role: "Admin" | "Mentor" | "Candidate" | "Guest";
@@ -15,6 +17,35 @@ export const SideBar = ({ role }: SideBarProps) => {
 
     return (
         <>
+            {/*Mobile Sidebar */}
+            <div className="md:hidden p-4">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline" size="icon">
+                            <Menu/>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-64">
+                        <nav className="flex flex-col gap-2 mt-6">
+              {links.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    "px-4 py-2 rounded bg-green-50 hover:bg-green-300 dark:hover:bg-gray-800",
+                    pathname === link.path && "bg-green-100 font-semibold"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+                    </SheetContent>
+                </Sheet>
+            </div>
+
+
+
             {/* Desktop Sidebar */}
             <aside className={cn(
                 "hidden md:flex flex-col h-screen border-r bg-white shadow-lg p-4 transition-all duration-300", 

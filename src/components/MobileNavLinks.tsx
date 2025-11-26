@@ -8,7 +8,7 @@ const MobileNavLinks = () => {
         <>
         <Link  
         to="/user-profile"
-        className="flex bg-white items-center font-bold hover:text-navy-500">Profile</Link>
+        className="flex items-center font-bold ">Profile</Link>
 
         <Button 
         onClick={()=> logout()}

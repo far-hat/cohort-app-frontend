@@ -26,9 +26,10 @@ const EditQuestionsPage = () => {
                 question_id : q.question_id,
                 question_text : q.question_text,
                 options : q.options.map( (o:any)=> ({
-                    option_id : o.option_id,             value : o.option_text
+                    option_id : o.option_id,             
+                    value : o.option_text
                 })),
-                correct_answer : q.options.find( (opt : any) => opt.correct_option),
+                correct_answer : q.options.find( (opt : any) => opt.correct_option?.option_text ),
             })),
         };
     };
@@ -38,12 +39,12 @@ const EditQuestionsPage = () => {
             const originalQuestion = quiz?.questions?.[index];
 
             return{
-                question_id : originalQuestion?.question_id || 0,
+                question_id : originalQuestion?.question_id ,
                 question_text : q.question_text,
                 options : q.options.map((opt,optIndex) =>{
                     const originalOption = originalQuestion?.options?.[optIndex];
                     return{
-                        option_id : originalOption?.option_id || 0,
+                        option_id : originalOption?.option_id ,
                         option_text : opt.value,
                         correct_option : q.correct_answer === opt.value
                     };

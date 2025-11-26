@@ -7,7 +7,7 @@ type Props ={
 
 const Auth0ProviderWithNavigate = ({children}:Props) => {
     const navigate = useNavigate();
-
+    
     const domain = import.meta.env.VITE_AUTH0_DOMAIN;
     const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
     const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
@@ -16,9 +16,9 @@ const Auth0ProviderWithNavigate = ({children}:Props) => {
     if( !domain || !clientId || !redirectUri || !audience){
         throw new Error("Unable to initialise Auth0");
     }
-
+    
     const onRedirectCallback = ()=> {
-            navigate("/auth-callback");
+            navigate(`/auth-callback`);
         };
 
     return(

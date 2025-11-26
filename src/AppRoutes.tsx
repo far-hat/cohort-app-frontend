@@ -6,7 +6,6 @@ import CreateQuiz from "./pages/quizpages/QuizPage";
 import QuestionPage from "./pages/quizpages/QuestionPage";
 import GetQuizListPage from "./pages/quizpages/GetAllQuizzesPage";
 import QuizDetailPage from "./pages/quizpages/QuizDetailPage";
-import QuizAttempt from "./pages/quizpages/QuizAttemptPage";
 import RoleProtectedRoutes from "./RoleProtectedRoutes";
 import AdminPage from "./pages/userpages/AdminPage";
 import MentorPage from "./pages/userpages/MentorPage";
@@ -20,6 +19,10 @@ import { CandidateHomeContent } from "./pages/userpages/CandidateHomeContext";
 import QuizAttemptPage from "./pages/quizpages/QuizAttemptPage";
 import { CandidateRegistrationForm, MentorRegistrationForm } from "./forms/userforms/UserProfileForm";
 import EditQuestionsPage from "./pages/quizpages/QuestionEditPage";
+import { MentorQuizSession } from "./pages/quizpages/MentorQuizSession";
+import { CandidateQuizInterface } from "./components/CandidateQuizInterface";
+import { MentorQuizControls } from "./components/MentorQuizControls";
+
 const AppRoute = () => {
     return (
         <Routes>
@@ -51,7 +54,9 @@ const AppRoute = () => {
                 <Route path="create-quiz/:quizId/questions" element={<QuestionPage />} />
                 <Route path="quizpage/:quizId" element={<QuizDetailPage />} />  
                 <Route path="edit-quiz/:quizId" element={<QuizEditPage />} /> 
-                <Route path="edit-quiz/:quizId/questions" element={<EditQuestionsPage />} />            
+                <Route path="edit-quiz/:quizId/questions" element={<EditQuestionsPage />} />     
+                <Route path="quiz-session/:quizId" element={<MentorQuizSession />} />
+   
             </Route>
 
 
@@ -65,6 +70,7 @@ const AppRoute = () => {
                 <Route path="quizzes" element={<GetQuizListPage/>} />
                 <Route path="attempt-quiz/:quizId" element={<QuizAttemptPage/>}/>
                 <Route path="profile" element={<CandidateRegistrationForm/>}/>
+                <Route path="attempt-live-quiz/:quizId" element={<CandidateQuizInterface />}/>
             </Route>
            
 

@@ -146,7 +146,7 @@ export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Pro
                       <RadioGroup
                         value={field.value}
                         onValueChange={field.onChange}
-                        className="space-y-2"
+                        className="space-y-2 "
                       >
                         {currentOptions.map((option, oIndex) => {
                           const watchedOptionValue = option?.value ?? "";
@@ -154,7 +154,7 @@ export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Pro
                           return (
                             <div
                               key={oIndex}
-                              className="flex items-center gap-2 my-2"
+                              className="flex items-center gap-2 my-2 "
                             >
                               {/* Option Input */}
                               <Input
@@ -169,6 +169,7 @@ export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Pro
                                 value={watchedOptionValue}
                                 id={`q${qIndex}o${oIndex}`}
                                 disabled={!watchedOptionValue}
+                                className="checked:border-gray-900 bg-gray-300"
                               />
                               <FormLabel
                                 htmlFor={`q${qIndex}o${oIndex}`}
