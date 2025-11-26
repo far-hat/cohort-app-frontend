@@ -7,6 +7,8 @@ export const useSocket = (quizId: number) => {
     const [quizState, setQuizState] = useState<QuizState| null>(null);
     const socketRef = useRef<Socket | null>(null);
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    
    useEffect( ()=> {
     if(!quizId || !API_BASE_URL) return;
 
@@ -15,7 +17,7 @@ export const useSocket = (quizId: number) => {
     }
 
     
-        socketRef.current = io(API_BASE_URL, {
+    socketRef.current = io(API_BASE_URL, {
             transports : ["websocket","polling"],
             withCredentials : true,
         });
@@ -24,11 +26,15 @@ export const useSocket = (quizId: number) => {
     const socket = socketRef.current;
 
     //Connection
-    socket.on("connect", ()=> setIsConnected(true));
+    socket.on("connect", ()=> {
+        setIsConnected(true);
+        //Join Room
+        socket.emit("join_quiz",quizId);
+        });
+
     socket.on("disconnect",()=> setIsConnected(false));
 
-    //Join Room
-    socket.emit("join_quiz",quizId);
+    
 
     //Server Events
 
@@ -37,9 +43,38 @@ export const useSocket = (quizId: number) => {
         setQuizState(data);
     });
 
-    socket.on("quiz_paused",(data)=> setQuizState(data));
-    socket.on("quiz_resumed",(data)=> setQuizState(data));
-    socket.on("quiz_ended",(data)=> setQuizState(data));
+     socket.on("quiz_started", (payload) => {
+            setQuizState({
+                state: "active",
+                quizId: payload.quizId,
+                started_at: payload.started_at,
+                duration: payload.duration
+            });
+        });
+
+        socket.on("quiz_paused", (payload) => {
+            setQuizState({
+                state: "paused",
+                quizId: payload.quizId,
+                pausedAt: payload.pausedAt
+            });
+        });
+
+        socket.on("quiz_resumed", (payload) => {
+            setQuizState({
+                state: "active",
+                quizId: payload.quizId,
+                resumedAt: payload.resumedAt
+            });
+        });
+
+        socket.on("quiz_ended", (payload) => {
+            setQuizState({
+                state: "ended",
+                quizId: payload.quizId,
+                endedAt: payload.endedAt
+            });
+        });
 
     return()=> {
         

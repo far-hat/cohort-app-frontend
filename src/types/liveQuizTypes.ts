@@ -21,34 +21,23 @@ export type LiveQuestion = {
 
 // Quiz state
 export type QuizState =
-    // Waiting for quiz to start
     | {
-          state: "waiting";
-          started_at?: string;
+          state: "active";          // start/resume
+          quizId: number;
+          started_at?: string;      // quiz_started
+          resumedAt?: string;       // quiz_resumed
           duration?: number;
       }
-    // A question is being displayed
     | {
-          state: "question";
-          question: LiveQuestion;
-          started_at?: string;
-          duration?: number;
+          state: "paused";          // quiz_paused
+          quizId: number;
+          pausedAt: string;
       }
-    // Quiz paused
     | {
-          state: "paused";
-          paused_at?: string;
-          started_at?: string;
-          duration?: number;
-      }
-    // Quiz finished
-    | {
-          state: "finished";
-          ended_at?: string;
-          started_at?: string;
-          duration?: number;
+          state: "ended";           // quiz_ended
+          quizId: number;
+          endedAt: string;
       };
-
 
 // Returned by useSocket
 export type UseSocketState = {
