@@ -16,7 +16,12 @@ const request = async(url : string, method : string = "GET") => {
 }
 
 export const quizSessionApi = {
-    startQuiz : (quizId : number) => request(`/api/quiz-session/${quizId}/start`, "POST"),
+    startQuiz : (quizId : number) => {
+      console.log("Starting quiz:", quizId);
+      const result =  request(`/api/quiz-session/${quizId}/start`, "POST");
+      return result;
+    },
+    
 
     pauseQuiz : (quizId : number) => request(`/api/quiz-session/${quizId}/pause`, "POST"),
 
@@ -24,6 +29,6 @@ export const quizSessionApi = {
 
     stopQuiz : (quizId : number) => request(`/api/quiz-session/${quizId}/stop`, "POST"),
 
-    getQuizState  : (quizId : number) => request(`/api/quiz-session/${quizId}/start`, "GET"),
+    getQuizState  : (quizId : number) => request(`/api/quiz-session/${quizId}/state`, "GET"),
 
   }

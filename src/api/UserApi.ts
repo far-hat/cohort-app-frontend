@@ -1,23 +1,9 @@
+import { CreateUserRequest, UpdateCandidateRequest, UpdateMentorRequest } from "@/types/userTypes";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "@tanstack/react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-type CreateUserRequest = {
-  auth0Id: string;
-  email: string;
-  user_name:string;
-  roles: string;
-};
-
-// type CreateUserResponse = {
-//   user_id: number;
-//   email: string;
-//   auth0Id: string;
-//   isActive: boolean;
-//   created_at: string;
-//   updated_at: string;
-// };
 
 export const useCreateUserRequest = () => {
   const {getAccessTokenSilently} = useAuth0();
@@ -66,14 +52,6 @@ export const useCreateUserRequest = () => {
 };
 
 
-
-export type UpdateMentorRequest = {
-  full_name: string;
-  phone: string;
-  expertise: string;
-  role: string;
-};
-
 export const useUpdateMentorRequest = () => {
   const {getAccessTokenSilently} =useAuth0();
 
@@ -107,13 +85,6 @@ export const useUpdateMentorRequest = () => {
   };
 };
 
-
-export type UpdateCandidateRequest = {
-  full_name: string;
-  phone: string;
-  education_level: string;
-  role: string;
-};
 
 export const useUpdateCandidateRequest = () => {
   const {getAccessTokenSilently} =useAuth0();

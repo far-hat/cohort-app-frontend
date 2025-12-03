@@ -1,15 +1,9 @@
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { CandidateWatcherProps } from "@/types/liveQuizTypes";
 
-type QuizForWatcher = {
-    quiz_id: number;
-    status: string;
-};
 
-type CandidateWatcherProps = {
-    quizzes: QuizForWatcher[];
-};
 
 export const CandidateQuizWatcher = ({ quizzes }: CandidateWatcherProps) => {
     const navigate = useNavigate();

@@ -6,6 +6,14 @@ export const attemptSchema = z.object({
 });
 export type AttemptForm = z.infer<typeof attemptSchema>;
 
+export type QuizForWatcher = {
+    quiz_id: number;
+    status: string;
+};
+
+export type CandidateWatcherProps = {
+    quizzes: QuizForWatcher[];
+};
 // Question option
 export type LiveQuestionOption = {
     option_id: number;

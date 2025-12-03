@@ -57,6 +57,7 @@ const quizSchema = z
   );
 
 export type QuizFormData = z.infer<typeof quizSchema>;
+
 type Props = { onSave: (QuizData: QuizFormData) => void; 
 isPending: boolean,
 isEdit? : boolean,

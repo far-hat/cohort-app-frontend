@@ -1,15 +1,8 @@
+import { AddQuestionsRequest, EditQuestionsRequest } from "@/types/questionTypes";
 import { useMutation } from "@tanstack/react-query";
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-export type AddQuestionsRequest = {
-     questions: {
-    question_text: string;
-    options: string[];
-    correct_answer: string;
-  }[];
-}
 
 export const useAddQuestions = (quizId : string) => {
 
@@ -49,17 +42,7 @@ export const useAddQuestions = (quizId : string) => {
     }
 }
 
-export type EditQuestionsRequest = {
-  questions: Array<{
-    question_id?: number;
-    question_text: string;
-    options: Array<{
-      option_id?: number;
-      option_text: string;
-      correct_option: boolean;
-    }>;
-  }>;
-}
+
 export const useEditQuestions = () => {
     const EditQuestionsRequest = async ({quizId,questions} : {quizId : string, questions : EditQuestionsRequest}) : Promise<any> => {
         if(!quizId) throw new Error("quizId is missing from route params");

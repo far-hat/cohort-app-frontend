@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { QuizForm, QuizFormData } from "../../forms/quizforms/QuizForm";
-import { CreateQuizRequest, useCreateMyQuiz } from "@/api/QuizApi";
+import { useCreateMyQuiz } from "@/api/QuizApi";
+import { CreateQuizRequest } from "@/types/quizTypes";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CreateQuiz = () => {
     const navigate = useNavigate();
+    const user = useAuth0();
 
     const { CreateQuiz , isPending} = useCreateMyQuiz();
 

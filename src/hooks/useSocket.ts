@@ -10,7 +10,8 @@ export const useSocket = (quizId: number) => {
 
     
    useEffect( ()=> {
-    if(!quizId || !API_BASE_URL) return;
+    if(!quizId) return;
+    console.log("Socket connection attempt for quiz:", quizId);
 
     if(socketRef.current){
         socketRef.current.disconnect();
@@ -38,10 +39,7 @@ export const useSocket = (quizId: number) => {
 
     //Server Events
 
-    socket.on("quiz_started",(data)=> {
-        console.log("QUIZ STARTED:", data);
-        setQuizState(data);
-    });
+    
 
      socket.on("quiz_started", (payload) => {
             setQuizState({
@@ -81,7 +79,7 @@ export const useSocket = (quizId: number) => {
             socket.emit("leave_quiz",quizId);
             socket.disconnect();
     };
-   },[quizId, API_BASE_URL]);
+   },[quizId]);
 
    return {
     socket : socketRef.current,
