@@ -84,6 +84,10 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   const handleEditClick = (quizId: number) => {
     navigate(`/mentor/edit-quiz/${quizId}`);
   }
+
+  const handleLiveQuizClick = (quizId : number) => {
+    navigate(`/mentor/quiz-session/${quizId}`);
+  }
   // ===================== UI ===============
   if (isPending) {
     return <span>Loading...</span>;
@@ -158,11 +162,12 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   <TableCell>
                     {role === "mentor" ? (
                        <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={() => handleViewClick(quiz.quiz_id)}>View</Button>
+                        <Button >View</Button>
                         <Button size="sm" variant="outline" onClick={() => handleEditClick(quiz.quiz_id)}>Edit</Button>
                         <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(quiz.quiz_id)}>
                           Delete
                         </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleLiveQuizClick(quiz.quiz_id)}> Start Live Quiz </Button>
                       </div>
                     ) 
                     : (

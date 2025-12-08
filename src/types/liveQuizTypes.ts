@@ -25,33 +25,85 @@ export type LiveQuestion = {
     question_id: number;
     question_text: string;
     options: LiveQuestionOption[];
+    total_questions : number;
+    question_number : number;
 };
+
+export type QuizQuestion = {
+    question_id : number;
+    question_text : string;
+    options : Array<{
+        option_id : number;
+        option_text : string;
+    }>;
+    question_number : number;
+    total_questions : number;
+};
+
+export type CandidateQuizState = {
+    state : "waiting" | "active" | "ended" | "paused";
+    quizId : number;
+    duration : number;
+    remainingTime : number;
+    currentQuestion : QuizQuestion;
+    totalQuestions : number;
+    answers : Record<number,string>;
+    canNavigate : boolean;
+}
 
 // Quiz state
 export type QuizState =
+        {
+            state : "waiting";
+            quizId : number;
+            message : string;
+        } 
     | {
-          state: "active";          // start/resume
+          state : "active"
+          session_state: string;          // start/resume
           quizId: number;
           started_at?: string;      // quiz_started
-          resumedAt?: string;       // quiz_resumed
+          resumed_at?: string;       // quiz_resumed
           duration?: number;
+          remainingTime : number;
+          questions : LiveQuestion[];
+          currentQuestionIndex : number;
+          answers? : Record<number,string>;
       }
     | {
+          session_state : string;
           state: "paused";          // quiz_paused
           quizId: number;
-          pausedAt: string;
+          paused_at: string;
       }
     | {
-          state: "ended";           // quiz_ended
+          state: "ended"; 
+          session_state : string;          // quiz_ended
           quizId: number;
-          endedAt: string;
+          ended_at: string;
+          reason? : "time_up" | "mentor_stopped" | "submitted";
+      }
+      
+    | {
+          state: "scheduled" | "draft";  // Add these states
+          session_state?: string;
+          quizId: number;
       };
 
+export type CandidateProgress ={
+    candidateId : string;
+    candidateName : string;
+    currentQuestion : number;
+    totalQuestions : number;
+    progress : number;
+    lastActivity : Date;
+    hasSubmitted? : boolean;
+}
 // Returned by useSocket
 export type UseSocketState = {
     socket: any;            // OR Socket from socket.io-client
     isConnected: boolean;
-    quizState: QuizState | null;
+    quizState: QuizState;
 };
 
 // Summarized quiz returned by API

@@ -1,7 +1,8 @@
 import { quizSessionApi } from "../api/QuizSessionApi";
 
-export const MentorQuizControls = ({ quizId, quizState }: any) => {
-    const state = quizState?.state;
+export const MentorQuizControls = ({ quizId, quizState } :  any) => {
+
+    const currentState = quizState?.state || quizState?.session_state;
 
     const start = async () => {
         await quizSessionApi.startQuiz(quizId);
@@ -18,11 +19,12 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
 
     return (
         <div className="flex gap-3 mt-4">
-            {state === "scheduled" || state === "draft" && (
-                <button onClick={start} className="px-4 py-2 bg-green-600 text-white rounded">Start Quiz</button>
-            )}
+             {currentState === "scheduled" || currentState === "draft" || currentState === "ended" && (
+    <button onClick={start} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Start Quiz</button>
+)} 
+             
 
-            {state === "active" && (
+            {currentState === "active" && (
                 <>
                     <button onClick={pause}className="px-4 py-2 bg-yellow-500 text-white rounded">Pause Quiz</button>
 
@@ -30,7 +32,7 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
                 </>
             )}
 
-            {state === "paused" && (
+            {currentState === "paused" && (
                 <>
                     <button onClick={resume} className="px-4 py-2 bg-blue-600 text-white rounded">
                         Resume Quiz
@@ -39,6 +41,10 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
                         Stop Quiz
                     </button>
                 </>
+            )}
+
+            {!currentState && (
+                <div className="text-gray-500">Loading quiz state...</div>
             )}
         </div>
     );

@@ -12,14 +12,10 @@ const QuizDetailPage = () => {
 
     if(!quiz) return <div>Quiz not found</div>
 
-    const handleStartQuiz = () => {
-        navigate(`/mentor/quiz-session/${quizId}`);
-    }
+   
     return (
         
         <div className="p-6">
-            <button 
-            onClick={handleStartQuiz}className="bg-green-100 hover:bg-green-200 text-black" >Start Quiz</button>
             <h1 className="text-2xl font-bold">{quiz.course_name}</h1>
             <p>{quiz.quiz_description}</p>
 
