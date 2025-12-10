@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useDeleteQuizById } from "@/api/QuizApi";
 import { useState } from "react";
-import { CandidateQuizWatcher } from "@/components/CandidateQuizWatcher";
+import { CandidateQuizWatcher } from "@/pages/quizpages/CandidateQuizWatcher";
 
 type Quiz = {
   quiz_id: number;
@@ -27,11 +27,11 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
 
   const { deleteQuiz, isPending: isDeleting } = useDeleteQuizById();
 
-  const [deletingId,setDeletingId] = useState<number | null>(null);
-  
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  
-/* ============= UTIL functions ============*/
+
+
+  /* ============= UTIL functions ============*/
   const formatDateOnly = (isoDate?: string) => {
     if (!isoDate) return "N/A";
     const date = new Date(isoDate);
@@ -66,26 +66,30 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   const handleDeleteClick = async (quizId: number) => {
     if (role !== "mentor") return;
     try {
-        setDeletingId(quizId);
-        await deleteQuiz(quizId);
-        navigate(`/mentor`);
-      } catch (error) {
-        console.log("Error deleting quiz", error);
-      }finally{
-        setDeletingId(null);
-      }
-    
+      setDeletingId(quizId);
+      await deleteQuiz(quizId);
+      navigate(`/mentor`);
+    } catch (error) {
+      console.log("Error deleting quiz", error);
+    } finally {
+      setDeletingId(null);
+    }
+
   }
 
-  const handleAttemptClick = (quizId: number) => {
-    navigate(`/candidate/attempt-quiz/${quizId}`);
+  const handleAttemptClick = (quizId: number, status: string) => {
+    if (status === "Active") {
+      navigate(`/candidate/attempt-live-quiz/${quizId}`);
+    } else {
+      navigate(`/candidate/attempt-quiz/${quizId}`);
+    }
   }
 
   const handleEditClick = (quizId: number) => {
     navigate(`/mentor/edit-quiz/${quizId}`);
   }
 
-  const handleLiveQuizClick = (quizId : number) => {
+  const handleLiveQuizClick = (quizId: number) => {
     navigate(`/mentor/quiz-session/${quizId}`);
   }
   // ===================== UI ===============
@@ -95,7 +99,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   return (
     <div className="m-4">
       {/* Candidate Quiz watcher*/}
-      {role === "candidate" && <CandidateQuizWatcher quizzes={quizzes}/>}
+      {role === "candidate" && <CandidateQuizWatcher quizzes={quizzes} />}
       {/* Mentor Create quiz button */}
       {role === "mentor" && (
         <div className="sticky top-0 bg-white py-4 z-10 border-b">
@@ -107,7 +111,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
           </Button>
         </div>
       )}
-      
+
       <div className="flex justify-between items-center mb-6 px-2">
         <h2 className="text-2xl font-bold">
           {role === "mentor" ? "My Quizzes" : "Available Quizzes"}
@@ -131,16 +135,16 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
             {quizzes.map((quiz) => {
               const duration = quiz.start_datetime && quiz.end_datetime
                 ? `${Math.round(
-                    (new Date(quiz.end_datetime).getTime() - new Date(quiz.start_datetime).getTime()) /
-                    (1000 * 60)
-                  )} mins`
+                  (new Date(quiz.end_datetime).getTime() - new Date(quiz.start_datetime).getTime()) /
+                  (1000 * 60)
+                )} mins`
                 : "N/A";
 
 
               return (
-                <TableRow 
-                key={quiz.quiz_id} 
-                className="hover:bg-gray-100"
+                <TableRow
+                  key={quiz.quiz_id}
+                  className="hover:bg-gray-100"
                 >
 
                   <TableCell className="font-semibold">{quiz.course_name}</TableCell>
@@ -150,18 +154,17 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   <TableCell className="font-semibold">{duration}</TableCell>
 
                   <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      quiz.status === 'Active'
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${quiz.status === 'Active'
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-700'
-                    }`}>
+                      }`}>
                       {quiz.status}
                     </span>
                   </TableCell>
 
                   <TableCell>
                     {role === "mentor" ? (
-                       <div className="flex gap-2">
+                      <div className="flex gap-2">
                         <Button >View</Button>
                         <Button size="sm" variant="outline" onClick={() => handleEditClick(quiz.quiz_id)}>Edit</Button>
                         <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(quiz.quiz_id)}>
@@ -169,17 +172,16 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => handleLiveQuizClick(quiz.quiz_id)}> Start Live Quiz </Button>
                       </div>
-                    ) 
-                    : (
-                      <Button
-                        size="sm"
-                        disabled={quiz.status !== "Active"}
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => handleAttemptClick(quiz.quiz_id)}
-                      >
-                        Attempt Quiz
-                      </Button>
-                    )}
+                    )
+                      : (
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          onClick={() => handleAttemptClick(quiz.quiz_id, quiz.status)}
+                        >
+                          {quiz.status === "Active" ? "Join Live Quiz" : "Attempt Quiz"}
+                        </Button>
+                      )}
                   </TableCell>
                 </TableRow>
               );
@@ -187,7 +189,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
           </TableBody>
         </Table>
       </div>
-      
+
       {isDeleting && <div className="mt-4 text-center">Deletion in process...</div>}
     </div>
   );

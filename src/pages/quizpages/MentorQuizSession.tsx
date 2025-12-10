@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSocket } from "@/hooks/useSocket";
-import { MentorQuizDashboard } from "@/components/MentorQuizDashboard";
-import { MentorQuizControls } from "@/components/MentorQuizControls";
+import { MentorQuizDashboard } from "@/pages/quizpages/MentorQuizDashboard";
+import { MentorQuizControls } from "@/pages/quizpages/MentorQuizControls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { quizSessionApi } from "@/api/QuizSessionApi";
@@ -29,7 +29,7 @@ export const MentorQuizSession = () => {
     const fetchQuizData = async () => {
       try {
         // Fetch quiz details including questions
-        const response = await fetch(`/api/quiz/${quizId}/questions`);
+        const response = await fetch(`/api/quiz/attempt/${quizId}`);
         const data = await response.json();
         if (data.success) {
           setQuizQuestions(data.questions || []);
@@ -89,13 +89,7 @@ export const MentorQuizSession = () => {
         socket.emit("mentor_start_quiz", {
           quizId: numericQuizId,
           duration: quizDuration * 60, // Convert to seconds
-          questions: quizQuestions.map((q, index) => ({
-            question_id: q.question_id,
-            question_text: q.question_text,
-            options: q.options,
-            question_number: index + 1,
-            total_questions: quizQuestions.length
-          }))
+          questions:startResponse.data.questions
         });
         
         console.log(`🚀 Quiz ${quizId} started for candidates with ${quizQuestions.length} questions`);

@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { getUserRoles } from "@/RoleProtectedRoutes";
+import { useAuth0 } from "@auth0/auth0-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar1 } from "lucide-react";
 import { useEffect } from "react";
@@ -65,6 +67,7 @@ initialData? : QuizFormData
 };
 
 export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
+  
   const form = useForm<QuizFormData>({
     resolver: zodResolver(quizSchema),
     defaultValues: isEdit ? initialData : {
@@ -106,6 +109,7 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage className="text-red-700" />
               </FormItem>
             )}
           />
@@ -119,6 +123,8 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage className="text-red-700" />
+
               </FormItem>
             )}
           />
@@ -166,7 +172,7 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                         />
                       </PopoverContent>
                     </Popover>
-                    <FormMessage />
+                <FormMessage className="text-red-700" />
                   </FormItem>
                 )}
               />
@@ -179,7 +185,7 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
-                    <FormMessage />
+                <FormMessage className="text-red-700" />
                   </FormItem>
                 )}
               />
@@ -213,6 +219,7 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                         />
                       </PopoverContent>
                     </Popover>
+                    <FormMessage className="text-red-700" />
                   </FormItem>
                 )}
               />
@@ -225,7 +232,7 @@ export const QuizForm = ({ onSave, isPending ,initialData,isEdit}: Props) => {
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-700" />
                   </FormItem>
                 )}
               />

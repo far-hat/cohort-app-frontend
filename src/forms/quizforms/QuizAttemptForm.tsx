@@ -149,7 +149,7 @@ export const QuizAttemptForm = ({ onSave, isPending }: Props) => {
                                                 ))}
                                             </RadioGroup>
                                         </FormControl>
-                                        <FormMessage className="text-red-600" />
+                                        <FormMessage className="text-red-700" />
                                     </FormItem>
                                 )}
                             />

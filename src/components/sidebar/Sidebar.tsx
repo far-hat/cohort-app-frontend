@@ -76,11 +76,11 @@ export const SideBar = ({ role }: SideBarProps) => {
                                     : "text-gray-700",
                                 collapsed && "flex justify-center px-2"
                             )}
-                            title={collapsed ? link.label : undefined}
+                            title={collapsed ? link.label : "☰"}
                         >
                             <div className="flex items-center gap-3">
                                 <span className={cn("text-lg", collapsed && "text-xl")}>
-                                    {collapsed ? link.label.charAt(0) : link.label}
+                                    {collapsed ? link.icon : link.label}
                                 </span>
                             </div>
                         </Link>

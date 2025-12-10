@@ -126,7 +126,7 @@ export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Pro
                     <FormControl>
                       <Input placeholder="Enter question text" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-700"/>
                   </FormItem>
                 )}
               />
@@ -195,7 +195,7 @@ export const QuestionsForm = ({ onSave,isPending,initialData,isEdit=false }: Pro
                       </RadioGroup>
                     </FormControl>
 
-                    <FormMessage />
+                    <FormMessage className="text-red-700"/>
 
                     {/* Add Option Button */}
                     {currentOptions.length < 4 && (

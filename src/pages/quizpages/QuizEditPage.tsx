@@ -1,5 +1,6 @@
-import { CreateQuizRequest, Quiz, useGetQuizById, useUpdateQuizById } from "@/api/QuizApi";
+import { useGetQuizById, useUpdateQuizById } from "@/api/QuizApi";
 import { QuizForm, QuizFormData } from "@/forms/quizforms/QuizForm";
+import { CreateQuizRequest, Quiz } from "@/types/quizTypes";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";

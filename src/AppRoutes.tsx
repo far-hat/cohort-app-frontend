@@ -20,8 +20,8 @@ import QuizAttemptPage from "./pages/quizpages/QuizAttemptPage";
 import { CandidateRegistrationForm, MentorRegistrationForm } from "./forms/userforms/UserProfileForm";
 import EditQuestionsPage from "./pages/quizpages/QuestionEditPage";
 import { MentorQuizSession } from "./pages/quizpages/MentorQuizSession";
-import { CandidateQuizInterface } from "./components/CandidateQuizInterface";
-import { MentorQuizControls } from "./components/MentorQuizControls";
+import { CandidateQuizInterface } from "./pages/quizpages/CandidateQuizInterface";
+import { MentorQuizControls } from "./pages/quizpages/MentorQuizControls";
 
 const AppRoute = () => {
     return (

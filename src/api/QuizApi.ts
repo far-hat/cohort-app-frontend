@@ -33,12 +33,15 @@ export const useSubmitQuizAttempt = () => {
 
 export const useCreateMyQuiz = ()=> {
 
+    const {getAccessTokenSilently} =useAuth0();
     const CreateMyQuizRequest = async ( quiz : CreateQuizRequest ) : Promise<QuizResponse> => {
 
+    const accessToken = await getAccessTokenSilently();
     const response = await fetch(`${API_BASE_URL}/api/quiz/create` , {
         method : "POST",
          headers : {
              "Content-Type" : "application/json",
+             Authorization : `Bearer ${accessToken}`
          },
          body : JSON.stringify(quiz),
      });

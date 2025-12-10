@@ -85,7 +85,12 @@ export type QuizState =
       }
       
     | {
-          state: "scheduled" | "draft";  // Add these states
+      state: "question";  
+      quizId: number;
+      question: LiveQuestion;
+    }
+  |{
+          state: "scheduled" | "draft";  
           session_state?: string;
           quizId: number;
       };

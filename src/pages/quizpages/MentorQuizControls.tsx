@@ -1,4 +1,4 @@
-import { quizSessionApi } from "../api/QuizSessionApi";
+import { quizSessionApi } from "../../api/QuizSessionApi";
 
 export const MentorQuizControls = ({ quizId, quizState } :  any) => {
 

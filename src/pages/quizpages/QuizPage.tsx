@@ -30,6 +30,7 @@ const CreateQuiz = () => {
             end_datetime : toISO(end_date,end_time),
             quiz_description : quiz_description || "" ,
             status : status || "",
+            
         };
 
         try{

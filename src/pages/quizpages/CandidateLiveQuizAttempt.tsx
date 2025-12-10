@@ -29,12 +29,16 @@ export const RealTimeQuizAttempt = () => {
         defaultValues: { answer: "" }
     });
 
-    const question = quizState?.state === "question" ? quizState.question : null;;
+    const isQuestionState = quizState?.state === "question";
+    const question = isQuestionState ? quizState.question : null;;
 
     // Candidate joins room once
     const handleJoinQuiz = () => {
         if (!socket || hasJoined) return;
-        socket.emit("candidate_joined", { quizId: Number(quizId) });
+        socket.emit("candidate_joined", {           
+            quizId: Number(quizId),
+            //candidateName: `Candidate_${Math.random().toString(36).substr(2, 5)}`
+         });
         setHasJoined(true);
     };
 
@@ -53,15 +57,30 @@ export const RealTimeQuizAttempt = () => {
         if (!question) return;
         setLocked(false);
         form.reset({ answer: "" });
-    }, [question]);
+    }, [question,form]);
+
+    useEffect(()=> {
+      if (!socket) return;
+
+    const handleNewQuestion = (data: { question: LiveQuestion }) => {
+      console.log("Received new question:", data.question);
+      // The socket will update quizState automatically through useSocket
+    };  
+
+    socket.on("new_question", handleNewQuestion);
+
+    return () => {
+      socket.off("new_question", handleNewQuestion);
+    };
+    },[socket]);
 
     if (isQuizLoading) {
-        return <div className="flex justify-center p-8">Loading quiz...</div>;
-    }
+    return <div className="flex justify-center p-8">Loading quiz...</div>;
+  }
 
-    if (!quiz) {
-        return <div className="text-center p-8">Quiz not found</div>;
-    }
+  if (!quiz) {
+    return <div className="text-center p-8">Quiz not found</div>;
+  }
 
     return (
         <div className="flex flex-col gap-6 min-h-screen bg-gray-50 p-4">
@@ -96,7 +115,7 @@ export const RealTimeQuizAttempt = () => {
                 )}
 
                 {/* QUIZ STOPPED */}
-                {quizState?.state === "finished" && (
+                {quizState?.state === "ended" && (
                     <div className="text-center mt-6 text-xl font-semibold text-green-700">
                         Quiz Finished — Thank you!
                     </div>

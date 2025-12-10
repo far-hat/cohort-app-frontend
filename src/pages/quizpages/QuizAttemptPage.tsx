@@ -11,7 +11,7 @@ const QuizAttemptPage = () => {
                 quizId: Number(quizId),
                 responses: quizData
             });
-            //console.log(`Quiz Response ${quizData}`);
+            console.log(`Quiz Response ${quizData}`);
             
             navigate(`/candidate`)
         } catch (error) {
