@@ -15,6 +15,8 @@ export const MentorQuizSession = () => {
   const [connectedCandidates, setConnectedCandidates] = useState<number>(0);
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Join as mentor when connected
   useEffect(() => {
     if (isConnected && socket && quizId) {
@@ -29,7 +31,7 @@ export const MentorQuizSession = () => {
     const fetchQuizData = async () => {
       try {
         // Fetch quiz details including questions
-        const response = await fetch(`/api/quiz/attempt/${quizId}`);
+        const response = await fetch(`${API_BASE_URL}/api/quiz-session/${quizId}/state`);
         const data = await response.json();
         if (data.success) {
           setQuizQuestions(data.questions || []);
@@ -100,13 +102,7 @@ export const MentorQuizSession = () => {
     }
   };
 
-  // Add this to your backend SocketService to handle mentor_start_quiz event
-  /*
-  socket.on("mentor_start_quiz", (data) => {
-    const { quizId, duration, questions } = data;
-    this.startQuizForCandidates(quizId, duration, questions);
-  });
-  */
+  
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">

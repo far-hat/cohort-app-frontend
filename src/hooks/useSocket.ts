@@ -8,7 +8,11 @@ export const useSocket = (quizId: number) => {
   const [quizState, setQuizState] = useState<QuizState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  
+
   const socketRef = useRef<Socket | null>(null);
+  const initializedRef = useRef(false);
+
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Fetch current state from API
@@ -82,6 +86,13 @@ export const useSocket = (quizId: number) => {
       return;
     }
 
+    if(initializedRef.current){
+      console.log("⚠️ useSocket already initialized, skipping");
+      return;
+    }
+
+    initializedRef.current = true;
+
     console.log("Socket connection attempt for quiz:", quizId);
 
     fetchCurrentState();
@@ -89,6 +100,7 @@ export const useSocket = (quizId: number) => {
     // Clean up existing socket
     if (socketRef.current) {
       socketRef.current.disconnect();
+      socketRef.current = null;
     }
 
     // Create new socket connection
@@ -100,7 +112,7 @@ export const useSocket = (quizId: number) => {
 
     const socket = socketRef.current;
 
-    // Connection handlers
+    // Connection events
     socket.on("connect", () => {
       console.log("✅ Connected successfully to socket server");
       setIsConnected(true);
@@ -116,11 +128,11 @@ export const useSocket = (quizId: number) => {
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("⚠️ useSocket: Disconnected, reason:", reason);
+      console.log("⚠️ Socket: Disconnected, reason:", reason);
       setIsConnected(false);
     });
 
-    // ============ SOCKET EVENT HANDLERS ============
+    // ============ Quiz Lifecycle events ============
 
     // Quiz started - INCLUDES QUESTIONS
     socket.on("quiz_started", (payload) => {
@@ -218,14 +230,11 @@ export const useSocket = (quizId: number) => {
     socket.on("time_update", (payload) => {
       console.log("⏰ Time update:", payload.remainingTime);
 
-      setQuizState(prev => {
-        if (!prev || prev.state !== "active") return prev;
-
-        return {
-          ...prev,
-          remainingTime: payload.remainingTime
-        };
-      });
+      setQuizState((prev) =>
+        prev && prev.state === "active"
+          ? { ...prev, remainingTime: payload.remainingTime }
+          : prev
+      );
     });
 
     // Candidate joined (mentor only)
@@ -251,9 +260,11 @@ export const useSocket = (quizId: number) => {
     // Cleanup function
     return () => {
       console.log("🧹 useSocket: Cleaning up");
+
       if (socket && socket.connected) {
         socket.emit("leave_quiz", quizId);
         socket.disconnect();
+        socketRef.current = null;
       }
     };
   }, [quizId, API_BASE_URL]);

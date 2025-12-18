@@ -99,7 +99,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   return (
     <div className="m-4">
       {/* Candidate Quiz watcher*/}
-      {role === "candidate" && <CandidateQuizWatcher quizzes={quizzes} />}
+      {/* {role === "candidate" && <CandidateQuizWatcher quizzes={quizzes} />} */}
       {/* Mentor Create quiz button */}
       {role === "mentor" && (
         <div className="sticky top-0 bg-white py-4 z-10 border-b">

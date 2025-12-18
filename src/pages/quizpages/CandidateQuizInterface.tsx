@@ -1,5 +1,5 @@
 // components/CandidateQuizInterface.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,14 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { attemptSchema } from "@/types/liveQuizTypes";
 import { useSocket } from "@/hooks/useSocket";
+import { toast } from "sonner";
 
 export const CandidateQuizInterface = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const numericQuizId = Number(quizId);
   const navigate = useNavigate();
   
-  const { quizState, isConnected, socket } = useSocket(numericQuizId);
+  const { quizState, isConnected, socket, isLoading } = useSocket(numericQuizId);
   const [localAnswers, setLocalAnswers] = useState<Record<number, string>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState<number>(0);
@@ -27,14 +28,19 @@ export const CandidateQuizInterface = () => {
   });
 
   // Join quiz as candidate when connected
+  const hasJoinedRef = useRef(false);
+  
   useEffect(() => {
-    if (isConnected && socket && quizId) {
-      console.log("🎓 Joining as candidate...");
-      socket.emit("candidate_joined", {
+    if (!socket || !quizId || !isConnected) return;
+    if(hasJoinedRef.current) return;
+
+    hasJoinedRef.current = true;
+
+    console.log("🎓 Joining as candidate...");
+    socket.emit("candidate_joined", {
         quizId: numericQuizId,
-        candidateName: "Candidate" // You can get this from user context
-      });
-    }
+        candidateName: "Candidate"
+    });
   }, [isConnected, socket, quizId]);
 
   // Handle quiz state updates
@@ -53,9 +59,11 @@ export const CandidateQuizInterface = () => {
       }
     }
 
-    if (quizState?.state === "ended") {
+    if (quizState?.state === "ended" && !hasSubmitted) {
       setHasSubmitted(true);
+
       setTimeout(() => {
+        toast("Redirecting to Home Page");
         navigate("/candidate");
       }, 3000);
     }
@@ -133,14 +141,26 @@ export const CandidateQuizInterface = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  if (!isConnected) {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="text-xl font-semibold mb-4">Connecting to quiz session...</div>
+        <div className="text-xl font-semibold mb-4">Loading quiz session...</div>
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
+
+  {!isConnected && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <p className="text-lg font-semibold">Reconnecting to quiz…</p>
+      <p className="text-sm text-gray-500 mt-2">
+        Please wait, do not refresh.
+      </p>
+    </div>
+  </div>
+)}
+
 
   if (quizState?.state === "waiting") {
     return (
