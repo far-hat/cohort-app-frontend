@@ -1,6 +1,6 @@
-import { createCourseType } from "@/types/courseTypes";
+import { Course, createCourseType } from "@/types/courseTypes";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -42,5 +42,39 @@ export const useCreateCourse = () => {
         isPending,
         isError,
         isSuccess
+    }
+}
+
+export const useGetMyCourses = () => {
+
+    const {getAccessTokenSilently} = useAuth0();
+
+    const getMyCoursesRequest = async() : Promise<Course[]> =>{
+
+        const accessToken = await getAccessTokenSilently();
+
+        const response = await fetch(`${API_BASE_URL}/api/course/view`,{
+        method: "GET",
+        headers: {
+            Authorization : `Bearer ${accessToken}`
+        }
+    });
+
+    if(!response){
+        throw new Error("Failed to fetch courses");
+    }
+
+    return response.json();
+    }
+
+    const {data : courses , isPending,error } = useQuery<Course[],Error> ({
+        queryKey : ["my_courses"],
+        queryFn : getMyCoursesRequest,
+    });
+
+    return{
+        courses,
+        isPending,
+        error,
     }
 }

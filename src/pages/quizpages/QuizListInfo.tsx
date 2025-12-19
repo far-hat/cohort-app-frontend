@@ -21,18 +21,9 @@ export type Props = {
   role: string;
 };
 
-const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
 
-  const navigate = useNavigate();
-
-  const { deleteQuiz, isPending: isDeleting } = useDeleteQuizById();
-
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-
-
-
-  /* ============= UTIL functions ============*/
-  const formatDateOnly = (isoDate?: string) => {
+/* ============= UTIL functions ============*/
+  export  const formatDateOnly = (isoDate?: string) => {
     if (!isoDate) return "N/A";
     const date = new Date(isoDate);
     return date.toLocaleDateString("en-IN", {
@@ -40,7 +31,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
     });
   };
 
-  const formatTimeOnly = (isoDate?: string) => {
+  export const formatTimeOnly = (isoDate?: string) => {
     if (!isoDate) return "N/A";
     const date = new Date(isoDate);
     return date.toLocaleTimeString("en-IN", {
@@ -48,6 +39,14 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
       hour12: true,
     });
   };
+
+const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
+
+  const navigate = useNavigate();
+
+  const { deleteQuiz, isPending: isDeleting } = useDeleteQuizById();
+
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   // ============= ACTIONS ==================
 
@@ -165,7 +164,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   <TableCell>
                     {role === "mentor" ? (
                       <div className="flex gap-2">
-                        <Button >View</Button>
+                        <Button size="sm" variant="outline" onClick={() => handleViewClick(quiz.quiz_id)}>View</Button>
                         <Button size="sm" variant="outline" onClick={() => handleEditClick(quiz.quiz_id)}>Edit</Button>
                         <Button size="sm" variant="destructive" onClick={() => handleDeleteClick(quiz.quiz_id)}>
                           Delete

@@ -12,12 +12,12 @@ export const sideBarLinks : Record<Role, SideBarLink[]> = {
     Admin : [
         { label : "Dashboard" , path : "/admin-dashboard" , icon: "icon" },
         { label : "Manage Users" , path : "/manage-users" , icon: "icon" },
-        { label : "Courses" , path : "/courses" , icon : "icon" },
+        { label : "Courses" , path : "/courses/view" , icon : "icon" },
         { label : "Quizzes" , path : "quizzes" , icon :"icon" },
     ],
     Mentor : [
         { label: "Home", path: "/mentor",icon:"🏠" },
-        { label: "Courses", path: "/mentor/courses" ,icon:"🎓"},
+        { label: "Courses", path: "/mentor/courses/view" ,icon:"🎓"},
         { label: "Quiz", path: "/mentor/quizzes" ,icon:"✍️"},
     ],
     Candidate : [
