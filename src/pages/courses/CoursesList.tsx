@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Course } from "@/types/courseTypes"
-import { formatDate } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { formatDateOnly } from "../quizpages/QuizListInfo";
 
@@ -19,7 +18,7 @@ export const CoursesList = ({ courses, isPending, role }: Props) => {
     }
 
     const handleViewClick = (id: string) => {
-        navigate(`/mentor/course/view/${id}`);
+        navigate(`/mentor/courses/view/${Number(id)}`);
     }
 
         if (isPending) return <span>Loading Courses...</span>

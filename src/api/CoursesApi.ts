@@ -78,3 +78,40 @@ export const useGetMyCourses = () => {
         error,
     }
 }
+
+export const useGetCourseById = (id:number) => {
+    const {getAccessTokenSilently} = useAuth0();
+
+    const getCourseById = async() : Promise<Course> => {
+
+        const accessToken = await getAccessTokenSilently();
+
+        const response = await fetch(`${API_BASE_URL}/api/course/view/${id}`, {
+            method : "GET",
+            headers : {
+                Authorization : `Bearer ${accessToken}`,
+            }
+        });
+
+        if(!response){
+            throw new Error("FAiled to fetch course");
+        }
+
+        return response.json();
+    }
+
+    const {
+        data: course,
+        isPending,
+        error,
+    } = useQuery<Course,Error> ({
+        queryKey : ["course"],
+        queryFn : getCourseById,
+    });
+
+    return {
+        course,
+        isPending,
+        error
+    }
+}

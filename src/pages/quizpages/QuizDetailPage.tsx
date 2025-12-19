@@ -1,14 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useGetQuizById } from "@/api/QuizApi";
 
 const QuizDetailPage = () => {
     const { quizId } = useParams();
     const { quiz, isPending} = useGetQuizById(Number(quizId));
 
-    const navigate = useNavigate();
     if(isPending) return <div>Loading</div>
-
-    
 
     if(!quiz) return <div>Quiz not found</div>
 
