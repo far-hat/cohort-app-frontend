@@ -25,6 +25,7 @@ import { MentorQuizControls } from "./pages/quizpages/MentorQuizControls";
 import CreateCourse from "./pages/courses/CreateCoursePage";
 import { ViewMyCourses } from "./pages/courses/ViewMyCoursesPages";
 import { CourseDetailPage } from "./pages/courses/CourseDetailPage";
+import { CreateCohortPage } from "./pages/courses/CreateCohort";
 
 const AppRoute = () => {
     return (
@@ -55,6 +56,8 @@ const AppRoute = () => {
                 <Route path="courses/view" element={<ViewMyCourses />} />
                 <Route path="courses/view/:id" element={<CourseDetailPage/>}/>
                 <Route path="courses/create" element={<CreateCourse/> }/>
+                <Route path="courses/:id/create-cohort" element={<CreateCohortPage/>}/>
+
                 <Route path="create-quiz" element={<CreateQuiz />} />
                 <Route path="create-quiz/:quizId/questions" element={<QuestionPage />} />
                 <Route path="quizpage/:quizId" element={<QuizDetailPage />} />  
