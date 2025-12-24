@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useQuizSocket } from "@/context/QuizSocketContext";
 
-export const MentorQuizDashboard = ({ quizId }: { quizId: number }) => {
-  const { socket } = useSocket(quizId);
+export const MentorQuizDashboard = () => {
+  const { socket } = useQuizSocket();
   const [candidates, setCandidates] = useState<any[]>([]);
   const [quizTime, setQuizTime] = useState<number>(0);
 
