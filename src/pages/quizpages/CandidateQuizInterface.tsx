@@ -1,6 +1,6 @@
 // components/CandidateQuizInterface.tsx
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -8,19 +8,22 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { attemptSchema } from "@/types/liveQuizTypes";
-import { useSocket } from "@/hooks/useSocket";
 import { toast } from "sonner";
+import { useQuizSocket } from "@/context/QuizSocketContext";
 
-export const CandidateQuizInterface = () => {
-  const { quizId } = useParams<{ quizId: string }>();
-  const numericQuizId = Number(quizId);
-  const navigate = useNavigate();
+export const CandidateQuizInterface = ({quizId} : {quizId : number}) => {
   
-  const { quizState, isConnected, socket, isLoading } = useSocket(numericQuizId);
+  const numericQuizId = Number(quizId);
+
+  const navigate = useNavigate();
+
+  const {socket,quizState,isConnected,isLoading} = useQuizSocket();
+  
   const [localAnswers, setLocalAnswers] = useState<Record<number, string>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [lockedQuestions, setLockedQuestions] = useState<Set<number>>(new Set);
 
   const form = useForm({
     resolver: zodResolver(attemptSchema),
@@ -29,33 +32,36 @@ export const CandidateQuizInterface = () => {
 
   // Join quiz as candidate when connected
   const hasJoinedRef = useRef(false);
-  
-  useEffect(() => {
-    if (!socket || !quizId || !isConnected) return;
-    if(hasJoinedRef.current) return;
 
-    hasJoinedRef.current = true;
+  useEffect(() => {
+    if (!socket || !quizId || !isConnected || hasJoinedRef.current) return;
 
     console.log("🎓 Joining as candidate...");
-    socket.emit("candidate_joined", {
-        quizId: numericQuizId,
-        candidateName: "Candidate"
+    socket.emit("join_quiz", {
+      quizId: numericQuizId,
+      candidateName: "Candidate"
     });
+    socket.once("join_quiz_ack", () => {
+      hasJoinedRef.current = true;
+    })
   }, [isConnected, socket, quizId]);
 
   // Handle quiz state updates
   useEffect(() => {
     if (quizState?.state === "active") {
       setRemainingTime(quizState.remainingTime);
-      
+
       // If we have questions, update current index
       if (quizState.questions?.length > 0) {
         // If candidate has navigated previously, keep their position
         // Otherwise start from first question
-        const savedIndex = localStorage.getItem(`quiz_${quizId}_index`);
-        if (savedIndex) {
-          setCurrentQuestionIndex(Number(savedIndex));
-        }
+        const goToQuestion = (index: number) => {
+          setCurrentQuestionIndex(index);
+          socket?.emit("candidate_navigated",{
+            quizId : numericQuizId,
+            questionNo : index,
+          });
+        };
       }
     }
 
@@ -69,50 +75,38 @@ export const CandidateQuizInterface = () => {
     }
   }, [quizState]);
 
-  // Timer countdown
-  useEffect(() => {
-    if (remainingTime <= 0 || quizState?.state !== "active") return;
-
-    const timer = setInterval(() => {
-      setRemainingTime(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [remainingTime, quizState?.state]);
 
   // Handle answer selection
   const handleAnswerSelect = (questionId: number, answer: string) => {
+    if (lockedQuestions.has(questionId)) return;
+
     setLocalAnswers(prev => ({ ...prev, [questionId]: answer }));
-    
+
     // Send to server
-    socket?.emit("candidate_answered", {
+    socket?.emit("answer_saved", {
       quizId: numericQuizId,
       questionId,
       answer
     });
   };
 
+  const lockCurrentQuestion = () => {
+    const q = currentQuestion?.question_id;
+    if (!q) return;
+
+    setLockedQuestions(prev => new Set(prev).add(q));
+  };
+
   // Handle navigation between questions
   const goToQuestion = (index: number) => {
-    if (index < 0 || index >= (quizState?.state === "active" ? quizState.questions.length : 0)) {
-      return;
-    }
-    
     setCurrentQuestionIndex(index);
-    localStorage.setItem(`quiz_${quizId}_index`, index.toString());
-    
+
     // Notify server
     socket?.emit("candidate_navigated", {
       quizId: numericQuizId,
-      questionIndex: index
+      questionNo: index
     });
-    
+
     // Reset form for new question
     const currentQuestion = quizState?.state === "active" ? quizState.questions[index] : null;
     if (currentQuestion && localAnswers[currentQuestion.question_id]) {
@@ -124,15 +118,19 @@ export const CandidateQuizInterface = () => {
 
   // Handle quiz submission
   const handleSubmitQuiz = () => {
-    if (hasSubmitted) return;
-    
-    socket?.emit("candidate_submitted", { quizId: numericQuizId });
-    setHasSubmitted(true);
-    
-    // Show confirmation
-    alert("Quiz submitted successfully!");
+  socket?.emit("candidate_submitted", { quizId: numericQuizId });
+};
+
+useEffect(() => {
+  socket?.on("submission_confirmed", () => {
     navigate("/candidate");
+  });
+
+  return () => {
+    socket?.off("submission_confirmed");
   };
+}, [socket]);
+
 
   // Format time display
   const formatTime = (seconds: number) => {
@@ -150,19 +148,22 @@ export const CandidateQuizInterface = () => {
     );
   }
 
-  {!isConnected && (
-  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
-      <p className="text-lg font-semibold">Reconnecting to quiz…</p>
-      <p className="text-sm text-gray-500 mt-2">
-        Please wait, do not refresh.
-      </p>
-    </div>
-  </div>
-)}
+  {
+    !isConnected && (
+      <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <p className="text-lg font-semibold">Reconnecting to quiz…</p>
+          <p className="text-sm text-gray-500 mt-2">
+            Please wait, do not refresh.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
 
-  if (quizState?.state === "waiting") {
+  if (quizState?.state === "draft" ||
+    quizState?.state === "scheduled") {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Card className="p-8 max-w-md text-center">
@@ -197,7 +198,7 @@ export const CandidateQuizInterface = () => {
         <Card className="p-8 max-w-md text-center">
           <CardHeader className="text-2xl font-bold text-green-600">Quiz Completed</CardHeader>
           <CardDescription className="mt-4">
-            {quizState?.state === "ended" && quizState.reason === "time_up" 
+            {quizState?.state === "ended" && quizState.reason === "time_up"
               ? "Time's up! Quiz has been automatically submitted."
               : "Quiz has been submitted successfully."}
           </CardDescription>
@@ -210,8 +211,8 @@ export const CandidateQuizInterface = () => {
   }
 
   // Main quiz interface
-  const currentQuestion = quizState?.state === "active" 
-    ? quizState.questions[currentQuestionIndex] 
+  const currentQuestion = quizState?.state === "active"
+    ? quizState.questions[currentQuestionIndex]
     : null;
 
   return (
@@ -225,7 +226,7 @@ export const CandidateQuizInterface = () => {
           <div className={`text-2xl font-bold ${remainingTime < 60 ? 'text-red-600' : 'text-gray-800'}`}>
             ⏱️ {formatTime(remainingTime)}
           </div>
-          <Button 
+          <Button
             onClick={handleSubmitQuiz}
             className="bg-red-600 hover:bg-red-700"
             disabled={hasSubmitted}
@@ -247,9 +248,9 @@ export const CandidateQuizInterface = () => {
                   onClick={() => goToQuestion(idx)}
                   className={`
                     h-10 w-10 rounded-full flex items-center justify-center
-                    ${currentQuestionIndex === idx 
-                      ? 'bg-blue-600 text-white' 
-                      : localAnswers[q.question_id] 
+                    ${currentQuestionIndex === idx
+                      ? 'bg-blue-600 text-white'
+                      : localAnswers[q.question_id]
                         ? 'bg-green-100 text-green-800 border border-green-300'
                         : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                     }
@@ -259,11 +260,11 @@ export const CandidateQuizInterface = () => {
                 </button>
               ))}
             </div>
-            
+
             <div className="mt-6">
               <h4 className="font-semibold mb-2">Navigation</h4>
               <div className="flex gap-2">
-                <Button 
+                <Button
                   onClick={() => goToQuestion(currentQuestionIndex - 1)}
                   disabled={currentQuestionIndex === 0}
                   variant="outline"
@@ -271,7 +272,7 @@ export const CandidateQuizInterface = () => {
                 >
                   ← Previous
                 </Button>
-                <Button 
+                <Button
                   onClick={() => goToQuestion(currentQuestionIndex + 1)}
                   disabled={currentQuestionIndex === (quizState?.state === "active" ? quizState.questions.length - 1 : 0)}
                   variant="outline"
@@ -291,7 +292,7 @@ export const CandidateQuizInterface = () => {
               <>
                 <div className="mb-6">
                   <div className="text-sm text-gray-500 mb-2">
-                    Question {currentQuestion.question_number} of {currentQuestion.total_questions}
+                    Question {currentQuestionIndex + 1} of {quizState?.state === "active" ? quizState.questions.length : null}
                   </div>
                   <h2 className="text-2xl font-bold">
                     {currentQuestion.question_text}
@@ -349,8 +350,8 @@ export const CandidateQuizInterface = () => {
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <div className="flex justify-between">
                     <div className="text-sm text-gray-600">
-                      {localAnswers[currentQuestion.question_id] 
-                        ? "✓ Answer saved" 
+                      {localAnswers[currentQuestion.question_id]
+                        ? "✓ Answer saved"
                         : "No answer selected"}
                     </div>
                     <div className="flex gap-3">

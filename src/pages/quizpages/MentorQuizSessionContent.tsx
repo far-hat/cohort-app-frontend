@@ -19,7 +19,6 @@ export const MentorQuizSessionContent = ( {quizId} : {quizId : number})  => {
 
     useEffect( () => {
         if(isConnected && socket){
-            socket.emit("join_quiz",quizId);
             socket.emit("mentor_joined",{quizId});
         }
     },[isConnected,socket,quizId]);
@@ -115,7 +114,7 @@ export const MentorQuizSessionContent = ( {quizId} : {quizId : number})  => {
               <MentorQuizControls
                 quizId={quizId}
                 quizState={quizState}
-                onStartQuiz={handleStartQuiz}
+                
               />
 
               {/* Session Info */}

@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod"
+import { useEffect } from "react";
 
 const cohortSchema = z.
     object({
@@ -29,18 +30,27 @@ const cohortSchema = z.
 export type CohortFormData = z.infer<typeof cohortSchema>;
 type Props = {
     onSave : (CohortData : CohortFormData) => void;
-    isPending : boolean
+    isPending : boolean,
+    isEditing? : boolean,
+    initialData? : CohortFormData
 }
 
-export const CreateCohortForm = ({onSave,isPending} :Props) => {
+export const CreateCohortForm = ({onSave,isPending,isEditing,initialData} :Props) => {
     const form = useForm<CohortFormData> ({
         resolver :zodResolver(cohortSchema),
-        defaultValues : {
+        
+        defaultValues : isEditing ? initialData : {
             cohort_name : "",
             start_date : undefined,
             end_date : undefined,
         }
     });
+
+    useEffect( ()=> {
+        if(initialData){
+            form.reset(initialData);
+        }
+    },[initialData,form])
 
     return(
         <Form {...form}>
@@ -130,7 +140,7 @@ export const CreateCohortForm = ({onSave,isPending} :Props) => {
               type="submit"
               className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded"
             >
-              Submit
+              {isEditing ? "Update" : "Submit"}
             </Button>
           )}
                     </div>

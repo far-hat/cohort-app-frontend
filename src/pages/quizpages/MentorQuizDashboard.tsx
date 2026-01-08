@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSocket } from "@/hooks/useSocket";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useQuizSocket } from "@/context/QuizSocketContext";
@@ -22,7 +21,7 @@ export const MentorQuizDashboard = () => {
           candidateId: data.candidateId,
           candidateName: data.candidateName,
           currentQuestion: 1,
-          totalQuestions: 10, // This should come from quiz data
+          totalQuestions: data.totalQuestions, // This should come from quiz data
           progress: 0,
           joinedAt: new Date(data.joinedAt),
           lastActivity: new Date(),
@@ -37,7 +36,7 @@ export const MentorQuizDashboard = () => {
           ? { 
               ...c, 
               currentQuestion: data.currentQuestionIndex,
-              progress: (data.currentQuestionIndex / data.totalQuestions) * 100,
+              progress: ((data.currentQuestionIndex + 1) / data.totalQuestions) * 100,
               lastActivity: new Date(data.lastActivity)
             }
           : c

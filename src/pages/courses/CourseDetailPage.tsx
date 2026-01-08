@@ -14,10 +14,14 @@ export const CourseDetailPage = () => {
     const navigate = useNavigate();
 
 const handleViewClick = (id:string)=>{
-    navigate(`/mentor/course/${id}/view-cohort`);
+    navigate(`/mentor/courses/${course?.course_id}/view-cohort/${id}`);
 }
 const handleCreateCohort = (id : string) => {
     navigate(`/mentor/courses/${id}/create-cohort`);
+}
+
+const handleUpdateCohort = (cohortId : string) => {
+    navigate(`/mentor/courses/${course?.course_id}/update-cohort/${cohortId}`)
 }
 
     if (isPending) return <LoadingButton />
@@ -71,7 +75,7 @@ const handleCreateCohort = (id : string) => {
                         <CardFooter className="flex gap-2">
                             <Button size="sm" variant="outline"
                             onClick={()=>handleViewClick(cohort.cohort_id)}>View</Button>
-                            <Button size="sm">Manage</Button>
+                            <Button size="sm" variant="outline" onClick={()=> handleUpdateCohort(cohort.cohort_id)}>Update</Button>
                         </CardFooter>
                     </Card>
 

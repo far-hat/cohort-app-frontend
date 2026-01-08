@@ -7,7 +7,7 @@ import { CandidateQuizWatcher } from "@/pages/quizpages/CandidateQuizWatcher";
 
 type Quiz = {
   quiz_id: number;
-  course_name: string;
+  quiz_name: string;
   quiz_description: string;
   status: string;
   start_datetime?: string;
@@ -146,7 +146,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   className="hover:bg-gray-100"
                 >
 
-                  <TableCell className="font-semibold">{quiz.course_name}</TableCell>
+                  <TableCell className="font-semibold">{quiz.quiz_name}</TableCell>
                   <TableCell className="font-semibold">{quiz.quiz_description}</TableCell>
                   <TableCell className="font-semibold">{formatDateOnly(quiz.start_datetime)}</TableCell>
                   <TableCell className="font-semibold">{formatTimeOnly(quiz.start_datetime)}</TableCell>

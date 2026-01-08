@@ -26,6 +26,9 @@ import CreateCourse from "./pages/courses/CreateCoursePage";
 import { ViewMyCourses } from "./pages/courses/ViewMyCoursesPages";
 import { CourseDetailPage } from "./pages/courses/CourseDetailPage";
 import { CreateCohortPage } from "./pages/courses/CreateCohort";
+import { CandidateQuizSession } from "./pages/quizpages/CandidateQuizSession";
+import { UpdateCohortPage } from "./pages/courses/UpdateCohortPage";
+import { ViewCohortByIdPage } from "./pages/courses/ViewCohortByIdPage";
 
 const AppRoute = () => {
     return (
@@ -57,6 +60,9 @@ const AppRoute = () => {
                 <Route path="courses/view/:id" element={<CourseDetailPage/>}/>
                 <Route path="courses/create" element={<CreateCourse/> }/>
                 <Route path="courses/:id/create-cohort" element={<CreateCohortPage/>}/>
+                <Route path="courses/:courseId/update-cohort/:cohortId" element= {<UpdateCohortPage />}/>
+
+                <Route path="courses/:courseId/view-cohort/:cohortId" element= {<ViewCohortByIdPage/>}/>
 
                 <Route path="create-quiz" element={<CreateQuiz />} />
                 <Route path="create-quiz/:quizId/questions" element={<QuestionPage />} />
@@ -78,7 +84,7 @@ const AppRoute = () => {
                 <Route path="quizzes" element={<GetQuizListPage/>} />
                 <Route path="attempt-quiz/:quizId" element={<QuizAttemptPage/>}/>
                 <Route path="profile" element={<CandidateRegistrationForm/>}/>
-                <Route path="attempt-live-quiz/:quizId" element={<CandidateQuizInterface />}/>
+                <Route path="attempt-live-quiz/:quizId" element={<CandidateQuizSession />}/>
             </Route>
            
 

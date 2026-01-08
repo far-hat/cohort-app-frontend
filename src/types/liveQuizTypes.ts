@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Question } from "./quizTypes";
 
 // Form schema + type
 export const attemptSchema = z.object({
@@ -52,48 +53,41 @@ export type CandidateQuizState = {
 }
 
 // Quiz state
-export type QuizState =
-        {
-            state : "waiting";
-            quizId : number;
-            message : string;
-        } 
-    | {
-          state : "active"
-          session_state: string;          // start/resume
-          quizId: number;
-          started_at?: string;      // quiz_started
-          resumed_at?: string;       // quiz_resumed
-          duration?: number;
-          remainingTime : number;
-          questions : LiveQuestion[];
-          currentQuestionIndex : number;
-          answers? : Record<number,string>;
-      }
-    | {
-          session_state : string;
-          state: "paused";          // quiz_paused
-          quizId: number;
-          paused_at: string;
-      }
-    | {
-          state: "ended"; 
-          session_state : string;          // quiz_ended
-          quizId: number;
-          ended_at: string;
-          reason? : "time_up" | "mentor_stopped" | "submitted";
-      }
-      
-    | {
-      state: "question";  
-      quizId: number;
-      question: LiveQuestion;
-    }
-  |{
-          state: "scheduled" | "draft";  
-          session_state?: string;
-          quizId: number;
-      };
+export type QuizState = 
+|{
+    state : "waiting" |"scheduled" |  "draft",
+    quizId : number,
+    message? : string
+}
+| {
+    state : "active",
+    quizId : number,
+    session_state : "active",
+    started_at : string,
+    duration : number,
+    questions : Question[],
+    currentQuestionIndex : number,
+    remainingTime : number,
+    answers : Record<number,string>,
+}
+|{
+    state : "paused",
+    session_state : "paused",
+    quizId : number,
+    paused_at : string,
+    currentQuestionIndex : number,
+    remainingTime : number,
+    duration : number,
+    questions : Question [],
+    answers : Record<number,string>
+}
+| {
+    state : "ended",
+    quizId : number,
+    session_state : "ended",
+    ended_at : string,
+    reason : string,
+}
 
 export type CandidateProgress ={
     candidateId : string;

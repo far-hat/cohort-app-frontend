@@ -43,6 +43,19 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
                 </>
             )}
 
+            {
+                currentState === "resumed" &&(
+                    <>
+                    <button onClick={pause} className="px-4 py-2 bg-yellow-600 text-white rounded">
+                        Pause Quiz
+                    </button>
+                    <button onClick={stop} className="px-4 py-2 bg-red-600 text-white rounded">
+                        Stop Quiz
+                    </button>
+                </>
+                )
+            }
+
             {!currentState && (
                 <div className="text-gray-500">Loading quiz state...</div>
             )}
