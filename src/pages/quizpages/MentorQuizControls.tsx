@@ -1,9 +1,12 @@
-import { quizSessionApi } from "../../api/QuizSessionApi";
+import { useApiClient } from "@/hooks/useApiClient";
+import { createQuizSessionApi } from "../../api/QuizSessionApi";
 
 export const MentorQuizControls = ({ quizId, quizState }: any) => {
 
     const currentState = quizState?.state || quizState?.session_state;
 
+    const {request}  = useApiClient();
+    const quizSessionApi = createQuizSessionApi(request)
     const start = async () => {
         await quizSessionApi.startQuiz(quizId);
     };

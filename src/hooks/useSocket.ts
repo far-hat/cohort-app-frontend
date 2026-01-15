@@ -1,9 +1,12 @@
-import { quizSessionApi } from "@/api/QuizSessionApi";
+import {  createQuizSessionApi } from "@/api/QuizSessionApi";
 import { QuizState } from "@/types/liveQuizTypes";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { useApiClient } from "./useApiClient";
 
 export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candidate") => {
+  const {request}  = useApiClient();
+  const quizSessionApi = createQuizSessionApi(request)
   const [isConnected, setIsConnected] = useState(false);
   const [quizState, setQuizState] = useState<QuizState | null>(null);
   const [isLoading, setIsLoading] = useState(true);

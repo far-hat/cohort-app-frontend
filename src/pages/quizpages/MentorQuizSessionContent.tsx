@@ -1,12 +1,15 @@
-import { quizSessionApi } from "@/api/QuizSessionApi";
+import { createQuizSessionApi } from "@/api/QuizSessionApi";
 import { useQuizSocket } from "@/context/QuizSocketContext";
 import { useEffect, useState } from "react"
 import { MentorQuizControls } from "./MentorQuizControls";
 import { MentorQuizDashboard } from "./MentorQuizDashboard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useApiClient } from "@/hooks/useApiClient";
 
 export const MentorQuizSessionContent = ( {quizId} : {quizId : number})  => {
+    const {request}  = useApiClient();
+    const quizSessionApi = createQuizSessionApi(request)
 
     const {socket,quizState,isConnected} = useQuizSocket();
 
