@@ -1,7 +1,7 @@
 import { useCreateUserRequest } from "@/api/UserApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useRef } from "react";
-import { replace, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { getUserRoles } from "@/RoleProtectedRoutes";
 
 const AuthCallbackPage = () => {

@@ -79,7 +79,7 @@ export const MentorQuizDashboard = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Live Dashboard</h2>
         <div className="text-xl font-bold">
-          ⏱️ {formatTime(quizTime)}
+          ⏱ {formatTime(quizTime)}
         </div>
       </div>
 
@@ -142,4 +142,4 @@ export const MentorQuizDashboard = () => {
       </div>
     </Card>
   );
-};
+};   

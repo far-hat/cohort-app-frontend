@@ -6,11 +6,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useSubmitQuizAttempt = () => {
+            const { getAccessTokenSilently } = useAuth0();
+
     const submitQuizAttemptRequest = async ({quizId,responses} :QuizSubmission): Promise<{ message: string }> => {
+        const accessToken = await getAccessTokenSilently();
         const response = await fetch(`${API_BASE_URL}/api/quiz/attempt/${quizId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization : `Bearer ${accessToken}`
             },
             body: JSON.stringify({responses}),
         });

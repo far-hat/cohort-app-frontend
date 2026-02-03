@@ -1,25 +1,27 @@
 import { QuizState } from "@/types/liveQuizTypes";
 import { createContext, useContext } from "react";
-import { Socket } from "socket.io-client"
+import { Socket } from "socket.io-client";
 
 type QuizSocketContextType = {
-    socket : Socket | null;
-    quizState : QuizState | null;
-    isConnected : boolean;
-    isLoading : boolean;
-}
+  socket: Socket | null;
+  quizState: QuizState | null;
+  isConnected: boolean;
+  isLoading: boolean;
 
- export const QuizSocketContext = createContext<QuizSocketContextType | undefined> (undefined);
+  joinQuiz: (quizId: number) => void;
+  sendAnswer: (questionId: number, answer: string) => void;
+  submitQuiz: () => void;
+};
+
+export const QuizSocketContext =
+  createContext<QuizSocketContextType | undefined>(undefined);
 
 export const useQuizSocket = () => {
-    const context = useContext(QuizSocketContext);
+  const context = useContext(QuizSocketContext);
 
-    if(!context){
-        throw new Error(
-            "UseSocket must be used in QuizSocketProvider"
-        );
-    }
+  if (!context) {
+    throw new Error("useQuizSocket must be used in QuizSocketProvider");
+  }
 
-    return context;
-}
-
+  return context;
+};

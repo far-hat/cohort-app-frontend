@@ -9,7 +9,7 @@ export const CandidateQuizSession = () => {
 
     return (
         <QuizSocketProvider quizId={numericQuizId}>
-            <CandidateQuizInterface quizId = {numericQuizId}/>
+            <CandidateQuizInterface/>
         </QuizSocketProvider>
     )
 }

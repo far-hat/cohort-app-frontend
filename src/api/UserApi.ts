@@ -6,50 +6,49 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 export const useCreateUserRequest = () => {
-  const {getAccessTokenSilently} = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
-
-  const createUserRequest = async (
-    user: CreateUserRequest
-  )=> {
-
+  const createUserRequest = async (user: CreateUserRequest) => {
     const accessToken = await getAccessTokenSilently();
 
     const response = await fetch(`${API_BASE_URL}/api/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(user),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Failed to create user");
+      throw new Error(data?.message || "Failed to create user");
     }
 
-    //  parse and return backend response
-    return response.json();
+    return data;
   };
 
-  const {
-    mutateAsync: createUser,
-    isPending,
-    isSuccess,
-    isError,
-   // data: createdUser, //  this will hold the backend response
-  } = useMutation<void, Error, CreateUserRequest>({
-    mutationFn: createUserRequest,
-  });
+  const { 
+    mutateAsync: createUser, 
+    isPending, 
+    isSuccess, 
+    isError, 
+    error 
+  } =
+    useMutation<any, Error, CreateUserRequest>({
+      mutationFn: createUserRequest,
+    });
 
   return {
     createUser,
     isPending,
     isSuccess,
     isError,
-    
+    error,
   };
 };
+
 
 
 export const useUpdateMentorRequest = () => {

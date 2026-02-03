@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Question } from "./quizTypes";
+import { Socket } from "socket.io-client";
 
 // Form schema + type
 export const attemptSchema = z.object({
@@ -52,59 +53,67 @@ export type CandidateQuizState = {
     canNavigate : boolean;
 }
 
-// Quiz state
-export type QuizState = 
-|{
-    state : "waiting" |"scheduled" |  "draft",
-    quizId : number,
-    message? : string
-}
-| {
-    state : "active",
-    quizId : number,
-    session_state : "active",
-    started_at : string,
-    duration : number,
-    questions : Question[],
-    currentQuestionIndex : number,
-    remainingTime : number,
-    answers : Record<number,string>,
-}
-|{
-    state : "paused",
-    session_state : "paused",
-    quizId : number,
-    paused_at : string,
-    currentQuestionIndex : number,
-    remainingTime : number,
-    duration : number,
-    questions : Question [],
-    answers : Record<number,string>
-}
-| {
-    state : "ended",
-    quizId : number,
-    session_state : "ended",
-    ended_at : string,
-    reason : string,
+
+
+// ----------------------------
+// Quiz State Union
+// ----------------------------
+export type QuizState =
+  | {
+      state: "draft" | "waiting" | "scheduled";
+      quizId: number;
+      message?: string;
+      remainingTime?: number;
+    }
+  | {
+      state: "active";
+      quizId: number;
+      started_at: string;          // ISO string
+      duration: number;           // total duration in seconds/minutes
+      questions: Question[];
+      currentQuestionIndex: number;
+      remainingTime: number;
+      answers: Record<number, string>;
+    }
+  | {
+      state: "paused";
+      quizId: number;
+      paused_at: string;          // ISO string
+      duration: number;
+      questions: Question[];
+      currentQuestionIndex: number;
+      remainingTime: number;
+      answers: Record<number, string>;
+    }
+  | {
+      state: "ended";
+      quizId: number;
+      ended_at: string;           // ISO string
+      reason: string;
+      remainingTime?: number;
+    };
+
+
+export type CandidateProgress = {
+  candidateId: string;
+  candidateName: string;
+  currentQuestionIndex: number;
+  totalQuestions: number;
+  progress: number;              // percentage (0–100)
+  lastActivity: Date;
+  hasSubmitted?: boolean;
 }
 
-export type CandidateProgress ={
-    candidateId : string;
-    candidateName : string;
-    currentQuestion : number;
-    totalQuestions : number;
-    progress : number;
-    lastActivity : Date;
-    hasSubmitted? : boolean;
-}
 // Returned by useSocket
 export type UseSocketState = {
-    socket: any;            // OR Socket from socket.io-client
-    isConnected: boolean;
-    quizState: QuizState;
+  socket: Socket | null;
+  isConnected: boolean;
+  quizState: QuizState | null;
+  isLoading: boolean;
+  sendAnswer: (questionId: number, answer: string) => void;
+  navigateQuestion: (questionIndex: number) => void;
+  submitQuiz: () => void;
 };
-
 // Summarized quiz returned by API
 export type QuizSummary = {
     quiz_id: number;

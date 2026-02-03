@@ -3,7 +3,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useDeleteQuizById } from "@/api/QuizApi";
 import { useState } from "react";
-import { CandidateQuizWatcher } from "@/pages/quizpages/CandidateQuizWatcher";
 
 type Quiz = {
   quiz_id: number;
@@ -77,7 +76,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
   }
 
   const handleAttemptClick = (quizId: number, status: string) => {
-    if (status === "Active") {
+    if (status === "active") {
       navigate(`/candidate/attempt-live-quiz/${quizId}`);
     } else {
       navigate(`/candidate/attempt-quiz/${quizId}`);
@@ -178,7 +177,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                           className="bg-green-600 hover:bg-green-700 text-white"
                           onClick={() => handleAttemptClick(quiz.quiz_id, quiz.status)}
                         >
-                          {quiz.status === "Active" ? "Join Live Quiz" : "Attempt Quiz"}
+                          {quiz.status === "active" ? "Join Live Quiz" : "Attempt Quiz"}
                         </Button>
                       )}
                   </TableCell>
