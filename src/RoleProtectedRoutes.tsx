@@ -18,7 +18,10 @@ const RoleProtectedRoutes = ({ children, allowedRoles }: Props) => {
 
     console.log("User Object:", user);
 
-    if (!isAuthenticated) return <Navigate to="/" replace />; 
+
+    if (!isAuthenticated || !user){ 
+        return <Navigate to="/" replace />; 
+    }
     const roles = getUserRoles(user);
     console.log("Roles:", roles);
 

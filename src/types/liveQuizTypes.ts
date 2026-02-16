@@ -42,56 +42,116 @@ export type QuizQuestion = {
     total_questions : number;
 };
 
-export type CandidateQuizState = {
-    state : "waiting" | "active" | "ended" | "paused";
-    quizId : number;
-    duration : number;
-    remainingTime : number;
-    currentQuestion : QuizQuestion;
-    totalQuestions : number;
-    answers : Record<number,string>;
-    canNavigate : boolean;
-}
+export type MentorQuizState =
+  | {
+      state: "draft" | "scheduled";
+      quizId: number;
+      start_datetime?: string;
+      duration?: number;
+    }
+  | {
+      state: "active";
+      quizId: number;
+      start_datetime: string;
+      duration: number;
+      remainingTimeMs: number;
+    }
+  | {
+      state: "paused";
+      quizId: number;
+      start_datetime: string;
+      paused_at: string;
+      duration: number;
+      remainingTimeMs: number;
+    }
+  | {
+      state: "ended";
+      quizId: number;
+      ended_at: string;
+      reason: string;
+    };
 
 
+
+
+
+export type CandidateQuizState =
+  | {
+      state: "draft" | "scheduled";
+      attemptId?: number;
+      quizId: number;
+      start_datetime?: string;
+      duration?: number;
+    }
+  | {
+      state: "active";
+      quizId: number;
+      start_datetime: string;
+      duration: number;
+      remainingTimeMs: number;
+      questions: Question[];
+      answers: Record<number, number>;
+      attemptId: number;
+    }
+  | {
+      state: "paused";
+      quizId: number;
+      start_datetime: string;
+      paused_at: string;
+      duration: number;
+      remainingTimeMs: number;
+      questions: Question[];
+      answers: Record<number, number>;
+      attemptId: number;
+    }
+  | {
+      state: "ended";
+      attemptId?: number;
+      quizId: number;
+      ended_at: string;
+      reason: string;
+    };
 
 // ----------------------------
 // Quiz State Union
 // ----------------------------
 export type QuizState =
   | {
-      state: "draft" | "waiting" | "scheduled";
+      state: "draft" | "scheduled";
+      attemptId? : number;
       quizId: number;
-      message?: string;
-      remainingTime?: number;
+      start_datetime?: string;
+      duration?: number;
     }
   | {
       state: "active";
       quizId: number;
-      started_at: string;          // ISO string
-      duration: number;           // total duration in seconds/minutes
+      start_datetime: string;
+      duration: number;
+      remainingTimeMs: number;   // from snapshot
       questions: Question[];
-      currentQuestionIndex: number;
-      remainingTime: number;
-      answers: Record<number, string>;
+      answers: Record<number, number>; // questionId -> optionId
+      attemptId: number;
     }
   | {
       state: "paused";
       quizId: number;
-      paused_at: string;          // ISO string
+      start_datetime: string;
+      paused_at: string;
       duration: number;
+      remainingTimeMs: number;
       questions: Question[];
-      currentQuestionIndex: number;
-      remainingTime: number;
-      answers: Record<number, string>;
+      answers: Record<number, number>;
+      attemptId: number;
     }
   | {
       state: "ended";
+      attemptId? : number;
       quizId: number;
-      ended_at: string;           // ISO string
+      ended_at: string;
       reason: string;
-      remainingTime?: number;
     };
+
 
 
 export type CandidateProgress = {
@@ -99,8 +159,9 @@ export type CandidateProgress = {
   candidateName: string;
   currentQuestionIndex: number;
   totalQuestions: number;
-  progress: number;              // percentage (0–100)
-  lastActivity: Date;
+  progress: number;              
+  lastActivity: string;
+  joinedAt? : string;
   hasSubmitted?: boolean;
 }
 

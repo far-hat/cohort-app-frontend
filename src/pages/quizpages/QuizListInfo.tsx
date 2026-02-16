@@ -3,12 +3,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { useDeleteQuizById } from "@/api/QuizApi";
 import { useState } from "react";
+import { createQuizSessionApi } from "@/api/QuizSessionApi";
+import { toast } from "sonner";
+import { useApiClient } from "@/hooks/useApiClient";
 
 type Quiz = {
   quiz_id: number;
   quiz_name: string;
   quiz_description: string;
   status: string;
+  session_state : string;
   start_datetime?: string;
   end_datetime?: string;
   mentor_id?: number;
@@ -40,12 +44,16 @@ export type Props = {
   };
 
 const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
+  
 
   const navigate = useNavigate();
 
   const { deleteQuiz, isPending: isDeleting } = useDeleteQuizById();
 
   const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const {request} = useApiClient();
+    const quizSessionApi = createQuizSessionApi(request);
 
   // ============= ACTIONS ==================
 
@@ -75,13 +83,21 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
 
   }
 
-  const handleAttemptClick = (quizId: number, status: string) => {
-    if (status === "active") {
+  const handleAttemptClick = async (quizId: number, session_state: string) => {
+  if (session_state === "active") {
+    
+    try {
+      await quizSessionApi.joinQuiz(quizId);   
       navigate(`/candidate/attempt-live-quiz/${quizId}`);
-    } else {
-      navigate(`/candidate/attempt-quiz/${quizId}`);
+    } catch (err) {
+      console.error(err);
+      toast.error("You must be logged in to join this quiz.");
     }
+  } else {
+    navigate(`/candidate/attempt-quiz/${quizId}`);
   }
+};
+
 
   const handleEditClick = (quizId: number) => {
     navigate(`/mentor/edit-quiz/${quizId}`);
@@ -149,7 +165,7 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                   <TableCell className="font-semibold">{quiz.quiz_description}</TableCell>
                   <TableCell className="font-semibold">{formatDateOnly(quiz.start_datetime)}</TableCell>
                   <TableCell className="font-semibold">{formatTimeOnly(quiz.start_datetime)}</TableCell>
-                  <TableCell className="font-semibold">{duration}</TableCell>
+                  <TableCell className="font-semibold">30 mins</TableCell>
 
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${quiz.status === 'Active'
@@ -175,9 +191,9 @@ const QuizListInfo = ({ quizzes, isPending, role }: Props) => {
                         <Button
                           size="sm"
                           className="bg-green-600 hover:bg-green-700 text-white"
-                          onClick={() => handleAttemptClick(quiz.quiz_id, quiz.status)}
+                          onClick={() => handleAttemptClick(quiz.quiz_id, quiz.session_state)}
                         >
-                          {quiz.status === "active" ? "Join Live Quiz" : "Attempt Quiz"}
+                          {quiz.session_state === "active" ? "Join Live Quiz" : "Attempt Quiz"}
                         </Button>
                       )}
                   </TableCell>

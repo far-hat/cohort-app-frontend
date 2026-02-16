@@ -8,7 +8,7 @@ export const CandidateQuizSession = () => {
 
 
     return (
-        <QuizSocketProvider quizId={numericQuizId}>
+        <QuizSocketProvider quizId={numericQuizId} role="candidate">
             <CandidateQuizInterface/>
         </QuizSocketProvider>
     )

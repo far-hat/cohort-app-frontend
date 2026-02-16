@@ -8,7 +8,7 @@ export const getToken = async (getAccessTokenSilently: any) => {
     refreshPromise = getAccessTokenSilently({
       authorizationParams: {
         audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-        scope: "openid profile email read:quiz write:quiz",
+        scope: "openid profile email",
       },
     }).then((token : any) => {
       accessToken = token;

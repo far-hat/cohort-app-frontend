@@ -17,6 +17,13 @@ export const createQuizSessionApi = (request : (url : string, method? : string, 
   joinQuiz: (quizId : number) => 
       request(`/api/quiz-session/${quizId}/join`, "POST"),
 
-  submitQuiz : (quizId : number, payload: any) => 
-      request(`api/quiz-session/${quizId}/submit`,"POST", payload),
+  getAttemptDetails: (attemptId: number) =>
+  request(`/api/quiz-session/attempts/${attemptId}`, "GET"),
+
+  submitAttempt: (attemptId: number,payload : object) =>
+  request(`/api/quiz-session/attempts/${attemptId}/submit`, "POST"),
+
+  getSnapshot : (quizId : number) => 
+    request(`/api/quiz-session/${quizId}/snapshot`, "GET")
+  
 })

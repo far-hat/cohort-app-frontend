@@ -58,7 +58,7 @@ const AppRoute = () => {
                 <Route path="quizzes" element={<GetMyQuizListPage />} />
                 <Route path="courses/view" element={<ViewMyCourses />} />
                 <Route path="courses/view/:id" element={<CourseDetailPage/>}/>
-                <Route path="courses/create" element={<CreateCourse/> }/>
+                <Route path="course/create" element={<CreateCourse/> }/>
                 <Route path="courses/:id/create-cohort" element={<CreateCohortPage/>}/>
                 <Route path="courses/:courseId/update-cohort/:cohortId" element= {<UpdateCohortPage />}/>
 
@@ -83,8 +83,9 @@ const AppRoute = () => {
                 <Route path="courses" element={<CoursesMenu/>}/>
                 <Route path="quizzes" element={<GetQuizListPage/>} />
                 <Route path="attempt-quiz/:quizId" element={<QuizAttemptPage/>}/>
+                <Route path="attempt-live-quiz/:quizId" element= {<CandidateQuizSession/>}/>
                 <Route path="profile" element={<CandidateRegistrationForm/>}/>
-                <Route path="attempt-live-quiz/:quizId" element={<CandidateQuizSession />}/>
+                
             </Route>
            
 

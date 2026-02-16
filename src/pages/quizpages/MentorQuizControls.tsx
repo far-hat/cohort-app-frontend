@@ -2,18 +2,24 @@ import { useApiClient } from "@/hooks/useApiClient";
 import { createQuizSessionApi } from "@/api/QuizSessionApi";
 import { useState } from "react";
 import { toast } from "sonner";
+import { QuizState } from "@/types/liveQuizTypes";
 
-export const MentorQuizControls = ({ quizId, quizState }: any) => {
+type Props = {
+  quizId : number;
+  sessionState : string;
+}
+
+export const MentorQuizControls = ({ quizId , sessionState}: Props) => {
   const { request } = useApiClient();
   const quizSessionApi = createQuizSessionApi(request);
   const [loading, setLoading] = useState(false);
 
-  const currentState = quizState?.state || "unknown";
 
   const safeCall = async (action: () => Promise<any>, successMsg: string) => {
     try {
       setLoading(true);
-      await action();
+      const res = await action();
+      if(!res.success) throw new Error;
       toast.success(successMsg);
     } catch (error) {
       toast.error("Action failed");
@@ -23,7 +29,7 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
   };
 
   const renderMessage = () => {
-    switch (currentState) {
+    switch (sessionState) {
       case "active":
         return "🟢 Quiz is currently active. You can pause or stop it.";
       case "paused":
@@ -45,9 +51,9 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
       </div>
 
       <div className="flex gap-3 flex-wrap">
-        {(currentState === "draft" ||
-          currentState === "scheduled" ||
-          currentState === "ended") && (
+        {(sessionState === "draft" ||
+          sessionState === "scheduled" ||
+          sessionState === "ended") && (
           <button
             disabled={loading}
             onClick={() =>
@@ -59,7 +65,7 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
           </button>
         )}
 
-        {currentState === "active" && (
+        {sessionState === "active" && (
           <>
             <button
               disabled={loading}
@@ -86,7 +92,7 @@ export const MentorQuizControls = ({ quizId, quizState }: any) => {
           </>
         )}
 
-        {currentState === "paused" && (
+        {sessionState === "paused" && (
           <>
             <button
               disabled={loading}

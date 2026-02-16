@@ -1,3 +1,4 @@
+import { Snapshot } from "@/pages/quizpages/MentorQuizDashboard";
 import { QuizState } from "@/types/liveQuizTypes";
 import { createContext, useContext } from "react";
 import { Socket } from "socket.io-client";
@@ -8,10 +9,12 @@ type QuizSocketContextType = {
   isConnected: boolean;
   isLoading: boolean;
 
-  joinQuiz: (quizId: number) => void;
-  sendAnswer: (questionId: number, answer: string) => void;
+  sendAnswer: (questionId: number, optionId : number) => void;
   submitQuiz: () => void;
+  snapshot : Snapshot;
 };
+
+
 
 export const QuizSocketContext =
   createContext<QuizSocketContextType | undefined>(undefined);

@@ -14,7 +14,6 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
   const [isConnected, setIsConnected] = useState(false);
   const [quizState, setQuizState] = useState<QuizState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState<string | null>("");
 
   const socketRef = useRef<Socket | null>(null);
 
@@ -47,7 +46,7 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
               started_at: data.start_datetime,
               duration: data.duration,
               questions: data.questions,
-              currentQuestionIndex: data.currentQuestion,
+              currentQuestionIndex: data.currentQuestionIndex,
               remainingTime: data.remainingTime,
               answers: {}
             };
@@ -56,7 +55,7 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
             state = {
               state: 'paused',
               quizId: data.quiz_id,
-              paused_at: data.start_datetime,
+              paused_at: data.paused_at,
               currentQuestionIndex : data.currentQuestionIndex,
               remainingTime : data.remainingTime,
               answers : data.answers,
@@ -78,7 +77,6 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
               quizId: data.quiz_id,
             };
         }
-      // if (quizState?.state === "active") return;
 
         setQuizState(state);
       
@@ -96,12 +94,13 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
 
     const connectSocket = async () => {
       try {
-        const token = await getAccessTokenSilently({
-          authorizationParams :  {
-            audience :  import.meta.env.VITE_AUTH0_AUDIENCE,
-            scope: "openid profile email read:quiz write:quiz",
-          },
-        });
+        const token = await getToken(getAccessTokenSilently);
+        //   {
+        //   authorizationParams :  {
+        //     audience :  import.meta.env.VITE_AUTH0_AUDIENCE,
+        //     scope: "openid profile email read:quiz write:quiz",
+        //   },
+        // });
 
         if(isCancelled) return;
 
@@ -146,21 +145,21 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
         });
 
         // --- Lifecycle events ---
-        socket.on("quiz_started", (payload) => {
+        socket.on("quiz:started", (payload) => {
           const state: QuizState = {
             state: "active",
             quizId: payload.quizId,
             started_at: payload.startedAt,
             duration: payload.duration,
             questions: payload.questions,
-            currentQuestionIndex: 0,
+            currentQuestionIndex: payload.currentQuestionIndex,
             remainingTime: payload.duration,
             answers: {},
           };
           setQuizState(state);
         });
 
-         socket.on("quiz_paused", (payload) => {
+         socket.on("quiz:paused", (payload) => {
           setQuizState((prev) => {
             if (!prev || prev.state !== "active") return prev;
             return {
@@ -172,7 +171,7 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
           });
         });
 
-        socket.on("quiz_resumed", (payload) => {
+        socket.on("quiz:resumed", (payload) => {
           setQuizState((prev) => {
             if (!prev || prev.state !== "paused") return prev;
             return {
@@ -180,12 +179,12 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
               state: "active",
               currentQuestionIndex:
                 payload.currentQuestionIndex ?? prev.currentQuestionIndex,
-              started_at: new Date().toLocaleString(),
+              started_at: payload.startedAt,
             };
           });
         });
 
-        socket.on("quiz_ended", (payload) => {
+        socket.on("quiz:stopped", (payload) => {
           setQuizState({
             state: "ended",
             quizId: payload.quizId,
@@ -194,11 +193,11 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
           });
         });
 
-         socket.on("time_update", (payload) => {
-          setQuizState((prev) => {
-            if (!prev || prev.state !== "active") return prev;
-            return { ...prev, remainingTime: payload.remainingTime };
-          });
+         socket.on("quiz:tick", (remainingSeconds) => {
+          setQuizState((prev) => prev ? {
+             ...prev,
+              remainingTime: remainingSeconds,
+          } : prev );
         });
 // ============ Mentor only events ======
          if (role === "mentor") {
@@ -239,6 +238,11 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
   // ---------------------------
   // --- Candidate Helpers ---
   // ---------------------------
+  const joinQuiz = (quizId: number) => {
+    if (!socketRef.current || role !== "candidate") return;
+    socketRef.current.emit("join_quiz", quizId);
+  };
+
   const sendAnswer = (questionId: number, answer: string) => {
     if (!socketRef.current || role !== "candidate") return;
     socketRef.current.emit("answer_saved", { quizId, questionId, answer });
@@ -269,8 +273,10 @@ export const useSocket = (quizId: number, role: "mentor" | "candidate" = "candid
     isConnected,
     quizState,
     isLoading,
-    accessToken,
+    
+    role,
     // Candidate helpers
+    joinQuiz,
     sendAnswer,
     navigateQuestion,
     submitQuiz,
